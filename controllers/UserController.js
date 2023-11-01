@@ -219,7 +219,7 @@ const methods = {
       res.status(400).json({ msg: error.message });
     }
   },
-
+  
   // แก้ไข
   async onUpdate(req, res) {
     try {

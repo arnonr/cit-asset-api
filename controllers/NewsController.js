@@ -1,6 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
 const uploadController = require("./UploadsController");
 
+const $table = "news";
+
+// const prisma = new PrismaClient();
+
 const prisma = new PrismaClient().$extends({
   result: {
     news: {
@@ -112,7 +116,7 @@ const countDataAndOrder = async (req, $where) => {
   }
 
   //Count
-  let $count = await prisma.news.findMany({
+  let $count = await prisma[$table].findMany({
     where: $where,
   });
 
@@ -201,9 +205,9 @@ const methods = {
       let $where = filterData(req);
       let other = await countDataAndOrder(req, $where);
 
-      let prismaLang = checkLanguage(req);
+      //   let prismaLang = checkLanguage(req);
 
-      const item = await prismaLang.news.findMany({
+      const item = await prisma[$table].findMany({
         select: selectField,
         where: $where,
         orderBy: other.$orderBy,
@@ -225,8 +229,9 @@ const methods = {
   // ค้นหาเรคคอร์ดเดียว
   async onGetById(req, res) {
     try {
-      let prismaLang = checkLanguage(req);
-      const item = await prismaLang.news.findUnique({
+      //   let prismaLang = checkLanguage(req);
+
+      const item = await prisma[$table].findUnique({
         select: selectField,
         where: {
           id: Number(req.params.id),
@@ -251,7 +256,7 @@ const methods = {
         return res.status(500).send("error");
       }
 
-      const item = await prisma.news.create({
+      const item = await prisma[$table].create({
         data: {
           news_type_id: Number(req.body.news_type_id),
           title_th: req.body.title_th,
@@ -295,7 +300,7 @@ const methods = {
         return res.status(500).send("error");
       }
 
-      const item = await prisma.news.update({
+      const item = await prisma[$table].update({
         where: {
           id: Number(req.params.id),
         },
@@ -331,7 +336,7 @@ const methods = {
   // ลบ
   async onDelete(req, res) {
     try {
-      await prisma.news.update({
+      await prisma[$table].update({
         where: {
           id: Number(req.params.id),
         },

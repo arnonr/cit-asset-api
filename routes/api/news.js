@@ -10,7 +10,7 @@ router.get("/:id", controllers.onGetById);
 
 router.post(
   "/",
-  // auth.required,
+  //   auth.required,
   controllers.onCreate
 );
 
