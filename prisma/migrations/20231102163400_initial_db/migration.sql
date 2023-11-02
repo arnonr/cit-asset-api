@@ -1,61 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `deleted_at` on the `user` table. All the data in the column will be lost.
-  - You are about to drop the column `group_id` on the `user` table. All the data in the column will be lost.
-  - You are about to drop the column `is_publish` on the `user` table. All the data in the column will be lost.
-  - You are about to drop the column `secret_confirm_email` on the `user` table. All the data in the column will be lost.
-  - You are about to drop the column `status` on the `user` table. All the data in the column will be lost.
-  - You are about to alter the column `email` on the `user` table. The data in that column could be lost. The data in that column will be cast from `VarChar(500)` to `VarChar(100)`.
-  - You are about to alter the column `password` on the `user` table. The data in that column could be lost. The data in that column will be cast from `VarChar(500)` to `VarChar(100)`.
-  - You are about to drop the `group` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `news` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `news_gallery` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `news_type` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `profile` table. If the table is not empty, all the data it contains will be lost.
-  - A unique constraint covering the columns `[username]` on the table `user` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `name` to the `user` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `username` to the `user` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropForeignKey
-ALTER TABLE `news` DROP FOREIGN KEY `news_news_type_id_fkey`;
-
--- DropForeignKey
-ALTER TABLE `profile` DROP FOREIGN KEY `profile_user_id_fkey`;
-
--- DropForeignKey
-ALTER TABLE `user` DROP FOREIGN KEY `user_group_id_fkey`;
-
--- AlterTable
-ALTER TABLE `user` DROP COLUMN `deleted_at`,
-    DROP COLUMN `group_id`,
-    DROP COLUMN `is_publish`,
-    DROP COLUMN `secret_confirm_email`,
-    DROP COLUMN `status`,
-    ADD COLUMN `department_id` INTEGER NULL,
-    ADD COLUMN `level` INTEGER NOT NULL DEFAULT 1,
-    ADD COLUMN `name` VARCHAR(100) NOT NULL,
-    ADD COLUMN `tel` VARCHAR(100) NULL,
-    ADD COLUMN `username` VARCHAR(32) NOT NULL,
-    MODIFY `email` VARCHAR(100) NULL,
-    MODIFY `password` VARCHAR(100) NULL;
-
--- DropTable
-DROP TABLE `group`;
-
--- DropTable
-DROP TABLE `news`;
-
--- DropTable
-DROP TABLE `news_gallery`;
-
--- DropTable
-DROP TABLE `news_type`;
-
--- DropTable
-DROP TABLE `profile`;
-
 -- CreateTable
 CREATE TABLE `asset` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -218,8 +160,25 @@ CREATE TABLE `repair_history` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateIndex
-CREATE UNIQUE INDEX `user_username_key` ON `user`(`username`);
+-- CreateTable
+CREATE TABLE `user` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(32) NOT NULL,
+    `password` VARCHAR(100) NULL,
+    `name` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NULL,
+    `tel` VARCHAR(100) NULL,
+    `level` INTEGER NOT NULL DEFAULT 1,
+    `department_id` INTEGER NULL,
+    `is_active` INTEGER NOT NULL DEFAULT 1,
+    `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `created_by` VARCHAR(255) NULL,
+    `updated_at` DATETIME(3) NULL,
+    `updated_by` VARCHAR(255) NULL,
+
+    UNIQUE INDEX `user_username_key`(`username`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
 ALTER TABLE `asset` ADD CONSTRAINT `asset_asset_type_id_fkey` FOREIGN KEY (`asset_type_id`) REFERENCES `asset_type`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
