@@ -41,7 +41,7 @@ model asset {
     transfer_to          String?        @db.VarChar(200) 
     transfer_to_department  String?     @db.VarChar(200) 
     comment              String?        @db.VarChar(200)        
-    is_active            Int            @default(1)
+    is_active            Int?            @default(1)
     created_at           DateTime?      @default(now()) @db.DateTime(0)
     created_by           String?        @db.VarChar(255)
     updated_at           DateTime?      @updatedAt
@@ -63,7 +63,7 @@ model asset_location_history {
     status      Int         @db.TinyInt @default(0)
     approved_at DateTime?
     approved_by String?     @db.VarChar(32)    
-    is_active   Int         @default(1)
+    is_active   Int?         @default(1)
     created_at  DateTime?   @default(now()) @db.DateTime(0)
     created_by  String      @db.VarChar(255)
     updated_at  DateTime?   @updatedAt
