@@ -1,5 +1,5 @@
 const express = require("express");
-// import api from './api/index.js' 
+// import api from './api/index.js'
 const assetLocationHistory = require("./api/asset-location-history");
 const assetPhoto = require("./api/asset-photo");
 const asset = require("./api/asset");
@@ -16,23 +16,22 @@ const router = express.Router();
 
 router.use(
   `/api/v${process.env.API_VERSION}`,
-  router.use("/asset-location-history", assetLocationHistory),  
-  router.use("/asset-photo", assetPhoto),  
-  router.use("/asset-type", assetType),   
-  router.use("/asset", asset),     
-  router.use("/budget-type", budgetType),  
+  router.use("/asset-location-history", assetLocationHistory),
+  router.use("/asset-photo", assetPhoto),
+  router.use("/asset-type", assetType),
+  router.use("/asset", asset),
+  router.use("/budget-type", budgetType),
   router.use("/department", department),
   router.use("/holder-history", holderHistory),
-  router.use("/repair-history", repairHistory),  
-
-  // router.use("/user", user),
+  router.use("/repair-history", repairHistory),
+  router.use("/user", user),
 
   // router.use("/news", news),
   // router.use("/news-type", newsType),
- 
+
   // router.use("/froala", froala),
   // router.use("/news-gallery", newsGallery),
-  
+
 );
 
 module.exports = router;

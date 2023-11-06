@@ -4,4 +4,4 @@ Develop
 
 ขั้นตอนการ Migrate DB
 - npx prisma migrate dev --create-only
-- prisma migrate dev
+- npx prisma migrate dev

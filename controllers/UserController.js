@@ -25,11 +25,11 @@ const filterData = (req) => {
 
   if (req.query.username) {
     $where["username"] = req.query.username;
-  }  
+  }
 
   if (req.query.name) {
     $where["name"] = req.query.name;
-  }    
+  }
 
   if (req.query.email) {
     $where["email"] = req.query.email;
@@ -37,11 +37,11 @@ const filterData = (req) => {
 
   if (req.query.tel) {
     $where["tel"] = req.query.tel;
-  }  
+  }
 
   if (req.query.level) {
     $where["level"] = parseInt(req.query.level);
-  }  
+  }
 
   if (req.query.secret_confirm_email) {
     $where["secret_confirm_email"] = req.query.secret_confirm_email;
@@ -49,11 +49,11 @@ const filterData = (req) => {
 
   if (req.query.department_id) {
     $where["department_id"] = parseInt(req.query.department_id);
-  }  
+  }
 
   if (req.query.is_active) {
     $where["is_active"] = parseInt(req.query.is_active);
-  }    
+  }
 
   return $where;
 };
@@ -94,20 +94,21 @@ const countDataAndOrder = async (req, $where) => {
 const selectField = {
   id: true,
   username: true,
-  name: true,  
+  name: true,
   email: true,
-  tel: true,  
+  tel: true,
   //   password: true,
   level: true,
   department_id: true,
-  is_active: true,  
-  // profile: {
-  //   select: {
-  //     prefix: true,
-  //     firstname: true,
-  //     surname: true,
-  //   },
-  // },
+  is_active: true,
+  department: {
+    select: {
+        id: true,
+        code: true,
+        name: true,
+        is_active: true,
+    },
+  },
 };
 
 //Encrypting text
@@ -202,11 +203,11 @@ const methods = {
       const item = await prisma.user.create({
         data: {
           username: req.body.username,
-          name: req.body.name,         
+          name: req.body.name,
           email: req.body.email,
-          tel: req.body.tel,   
-          level: Number(req.body.level),   
-          department_id: Number(req.body.department_id),   
+          tel: req.body.tel,
+          level: Number(req.body.level),
+          department_id: Number(req.body.department_id),
           // password: req.body.password,
           is_active: Number(req.body.is_active),
           created_by: "arnonr",
@@ -238,7 +239,7 @@ const methods = {
       res.status(400).json({ msg: error.message });
     }
   },
-  
+
   // แก้ไข
   async onUpdate(req, res) {
     try {
@@ -251,10 +252,10 @@ const methods = {
           username: req.body.username != null ? req.body.username : undefined,
           name: req.body.name != null ? req.body.name : undefined,
           email: req.body.email != null ? req.body.email : undefined,
-          tel: req.body.tel != null ? req.body.tel : undefined,          
+          tel: req.body.tel != null ? req.body.tel : undefined,
           level:req.body.level != null ? Number(req.body.level) : undefined,
-          department_id:req.body.department_id != null ? Number(req.body.department_id) : undefined,    
-          is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,                    
+          department_id:req.body.department_id != null ? Number(req.body.department_id) : undefined,
+          is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
         },
       });
 
@@ -295,7 +296,7 @@ const methods = {
         if (item.status == 1) {
           throw new Error("Not Confirm Email");
         }
-        
+
         if (bcrypt.compareSync(req.body.password, item.password) == false) {
           throw new Error("Password Wrong");
         }
@@ -341,24 +342,24 @@ const methods = {
         },
       });
 
-      const profile = await prisma.profile.create({
-        data: {
-          user_id: Number(item.id),
-          prefix: req.body.prefix,
-          firstname: req.body.firstname,
-          surname: req.body.surname,
-          is_publish: Number(req.body.is_publish),
-          contact_address: req.body.contact_address,
-          invoice_address: req.body.invoice_address,
-          invoice_name: req.body.invoice_name,
-          member_status: Number(req.body.member_status),
-          organization: req.body.organization,
-          phone: req.body.phone,
-          tax_id: req.body.tax_id,
-          created_by: "arnonr",
-          updated_by: "arnonr",
-        },
-      });
+      // const profile = await prisma.profile.create({
+      //   data: {
+      //     user_id: Number(item.id),
+      //     prefix: req.body.prefix,
+      //     firstname: req.body.firstname,
+      //     surname: req.body.surname,
+      //     is_publish: Number(req.body.is_publish),
+      //     contact_address: req.body.contact_address,
+      //     invoice_address: req.body.invoice_address,
+      //     invoice_name: req.body.invoice_name,
+      //     member_status: Number(req.body.member_status),
+      //     organization: req.body.organization,
+      //     phone: req.body.phone,
+      //     tax_id: req.body.tax_id,
+      //     created_by: "arnonr",
+      //     updated_by: "arnonr",
+      //   },
+      // });
 
       let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",

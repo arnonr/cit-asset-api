@@ -13,9 +13,10 @@ datasource db {
 model asset {
     id                   Int            @id @default(autoincrement())
     asset_code           String?        @db.VarChar(50)@unique
+    asset_name           String?        @db.VarChar(200)
     input_year           Int?           @db.Year
-    inspection_date      DateTime       @db.Date
-    approved_date        DateTime?      @db.Date           
+    inspection_date      DateTime?      @db.Date
+    approved_date        DateTime?      @db.Date
     vendor               String?        @db.VarChar(200)
     asset_type_id        Int
     brand                String?        @db.VarChar(200)
@@ -24,23 +25,23 @@ model asset {
     price                Decimal?       @db.Decimal(10,2)
     budget_type_id       Int
     is_transfer          Int?           @db.TinyInt
-    transfer_from        String?        @db.VarChar(200)   
-    location             String?        @db.VarChar(200)      
-    department_id        Int?    
-    drawer_name          String?        @db.VarChar(200)  
-    holder_name          String?        @db.VarChar(200) 
-    warranty_type_1      String?        @db.VarChar(200) 
-    warranty_day_1       Int?               
-    warranty_type_2      String?        @db.VarChar(200) 
-    warranty_day_2       Int?    
-    cover_photo          String?        @db.VarChar(200) 
+    transfer_from        String?        @db.VarChar(200)
+    location             String?        @db.VarChar(200)
+    department_id        Int?
+    drawer_name          String?        @db.VarChar(200)
+    holder_name          String?        @db.VarChar(200)
+    warranty_type_1      String?        @db.VarChar(200)
+    warranty_day_1       Int?
+    warranty_type_2      String?        @db.VarChar(200)
+    warranty_day_2       Int?
+    cover_photo          String?        @db.VarChar(200)
     asset_status         Int?           @db.TinyInt
     cancel_type          Int?           @db.TinyInt
     cancel_date          DateTime?      @db.Date
-    cancel_comment       String?        @db.VarChar(200)  
-    transfer_to          String?        @db.VarChar(200) 
-    transfer_to_department  String?     @db.VarChar(200) 
-    comment              String?        @db.VarChar(200)        
+    cancel_comment       String?        @db.VarChar(200)
+    transfer_to          String?        @db.VarChar(200)
+    transfer_to_department  String?     @db.VarChar(200)
+    comment              String?        @db.VarChar(200)
     is_active            Int?            @default(1)
     created_at           DateTime?      @default(now()) @db.DateTime(0)
     created_by           String?        @db.VarChar(255)
@@ -52,8 +53,8 @@ model asset {
     repair_history       repair_history[]
     asset_photo          asset_photo[]
     asset_type           asset_type      @relation(fields: [asset_type_id], references: [id])
-    budget_type          budget_type     @relation(fields: [budget_type_id], references: [id])  
-    department           department?       @relation(fields: [department_id], references: [id])     
+    budget_type          budget_type     @relation(fields: [budget_type_id], references: [id])
+    department           department?       @relation(fields: [department_id], references: [id])
 }
 
 model asset_location_history {
@@ -62,7 +63,7 @@ model asset_location_history {
     location    String?     @db.VarChar(200)
     status      Int         @db.TinyInt @default(0)
     approved_at DateTime?
-    approved_by String?     @db.VarChar(32)    
+    approved_by String?     @db.VarChar(32)
     is_active   Int?         @default(1)
     created_at  DateTime?   @default(now()) @db.DateTime(0)
     created_by  String      @db.VarChar(255)
@@ -132,7 +133,7 @@ model holder_history {
     holder_name String?     @db.VarChar(200)
     status      Int         @db.TinyInt @default(0)
     approved_at DateTime?
-    approved_by String?     @db.VarChar(32)    
+    approved_by String?     @db.VarChar(32)
     is_active   Int?        @default(1)
     created_at  DateTime?   @default(now()) @db.DateTime(0)
     created_by  String      @db.VarChar(255)
@@ -147,11 +148,11 @@ model repair_history {
     asset_id    Int
     repair_date DateTime?   @db.Date
     description String?     @db.Text
-    price       Decimal?    @db.Decimal(10,2)    
+    price       Decimal?    @db.Decimal(10,2)
     status      Int         @db.TinyInt @default(0)
-    reject_comment String?  @db.VarChar(200)        
+    reject_comment String?  @db.VarChar(200)
     approved_at DateTime?
-    approved_by String?     @db.VarChar(32)    
+    approved_by String?     @db.VarChar(32)
     is_active   Int?         @default(1)
     created_at  DateTime?   @default(now()) @db.DateTime(0)
     created_by  String      @db.VarChar(255)
@@ -162,20 +163,20 @@ model repair_history {
 }
 
 model user {
-    id            Int                 @id @default(autoincrement())    
+    id            Int                 @id @default(autoincrement())
     username      String              @db.VarChar(32)@unique
     password      String?             @db.VarChar(100)
-    name          String              @db.VarChar(100)    
+    name          String              @db.VarChar(100)
     email         String?             @db.VarChar(100)
     tel           String?             @db.VarChar(100)
     level         Int                 @default(1)
-    department_id Int?   
+    department_id Int?
     is_active     Int?                 @default(1)
     created_at    DateTime?           @default(now()) @db.DateTime(0)
     created_by    String?             @db.VarChar(255)
     updated_at    DateTime?           @updatedAt
     updated_by    String?             @db.VarChar(255)
-    // deleted_at  DateTime?
+    deleted_at  DateTime?
     department    department?         @relation(fields: [department_id], references: [id])
 }
 
