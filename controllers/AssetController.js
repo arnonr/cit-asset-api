@@ -228,6 +228,7 @@ const countDataAndOrder = async (req, $where) => {
 const selectField = {
     id: true,
     asset_code: true,
+    asset_name: true,
     input_year: true,
     inspection_date: true,
     approved_date: true,
