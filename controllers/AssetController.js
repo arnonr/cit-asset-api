@@ -17,6 +17,13 @@ const filterData = (req) => {
         //   mode: "insensitive",
         };
     }
+
+    if (req.query.asset_name) {
+        $where["asset_name"] = {
+        contains: req.query.asset_name,
+        //   mode: "insensitive",
+        };
+    }
     // Number
     if (req.query.input_year) {
         $where["is_active"] = parseInt(req.query.input_year);
