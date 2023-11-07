@@ -73,16 +73,16 @@ const methods = {
       } else {
         let data = {};
         data[table_name + "_id"] =
-          req.body[table_name + "_id"] != "null"
+          req.body[table_name + "_id"] != null
             ? Number(req.body[table_name + "_id"])
             : null;
-        data[table_name + "_gallery_file"] = pathFile;
+        data[table_name + "_photo_file"] = pathFile;
         data["secret_key"] = req.body.secret_key;
-        data["is_publish"] = 1;
+        // data["is_publish"] = 1;
         data["created_by"] = "arnonr";
         data["updated_by"] = "arnonr";
 
-        const item = await prisma[table_name + "_gallery"].create({
+        const item = await prisma[table_name + "_photo"].create({
           data: data,
         });
 
@@ -90,7 +90,7 @@ const methods = {
         return_json["message"] = "success";
         return_json["link"] = pathFile;
         return_json[table_name + "_id"] = item[table_name + "_id"];
-        return_json[table_name + "_gallery_id"] = item.id;
+        return_json[table_name + "_photo_id"] = item.id;
         res.status(201).json(return_json);
       }
     } catch (error) {

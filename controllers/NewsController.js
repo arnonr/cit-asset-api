@@ -290,6 +290,7 @@ const methods = {
   // แก้ไข
   async onUpdate(req, res) {
     try {
+
       let pathFile = await uploadController.onUploadFile(
         req,
         "/images/news/",

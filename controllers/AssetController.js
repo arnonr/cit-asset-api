@@ -1,6 +1,24 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const uploadController = require("./UploadsController");
+// const prisma = new PrismaClient();
 const $table = "asset";
+
+const prisma = new PrismaClient().$extends({
+    result: {
+        asset: {
+            cover_photo: {
+                needs: { cover_photo: true },
+                compute(asset) {
+                    let cover_photo = null;
+                    if (asset.cover_photo != null) {
+                        cover_photo = process.env.PATH_UPLOAD + asset.cover_photo;
+                    }
+                    return cover_photo;
+                },
+            },
+        },
+    },
+});
 
 const filterData = (req) => {
     let $where = {
@@ -379,10 +397,22 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
         try {
+
+            let pathFile = await uploadController.onUploadFile(
+                req,
+                "/images/asset/",
+                "cover_photo"
+            );
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].create({
                 data: {
 
                     asset_code: req.body.asset_code,
+                    asset_name: req.body.asset_name,
                     input_year: req.body.input_year,
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
@@ -403,7 +433,7 @@ const methods = {
                     warranty_day_1: Number(req.body.warranty_day_1),
                     warranty_type_2: req.body.warranty_type_2,
                     warranty_day_2: Number(req.body.warranty_day_2),
-                    cover_photo: req.body.cover_photo,
+                    cover_photo: pathFile,
                     asset_status: Number(req.body.asset_status),
                     cancel_type: Number(req.body.cancel_type),
                     cancel_date: req.body.cancel_date != null ? new Date(req.body.cancel_date) : undefined,
@@ -418,6 +448,15 @@ const methods = {
                 },
             });
 
+            await prisma.asset_photo.updateMany({
+                where: {
+                    secret_key: req.body.secret_key,
+                },
+                data: {
+                    asset_id: item.id,
+                },
+            });
+
             res.status(201).json({ ...item, msg: "success" });
         } catch (error) {
             res.status(400).json({ msg: error.message });
@@ -428,6 +467,16 @@ const methods = {
     async onUpdate(req, res) {
         try {
 
+            let pathFile = await uploadController.onUploadFile(
+                req,
+                "/images/asset/",
+                "cover_photo"
+            );
+
+            if (pathFile == "error") {
+                return res.status(500).send("error");
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -435,6 +484,7 @@ const methods = {
 
                 data: {
                     asset_code: req.body.asset_code != null ? req.body.asset_code : undefined,
+                    asset_name: req.body.asset_name != null ? req.body.asset_name : undefined,
                     input_year: req.body.input_year != null ? req.body.input_year : undefined,
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
@@ -455,7 +505,6 @@ const methods = {
                     warranty_day_1: req.body.warranty_day_1 != null ? Number(req.body.warranty_day_1) : undefined,
                     warranty_type_2: req.body.warranty_type_2 != null ? req.body.warranty_type_2 : undefined,
                     warranty_day_2: req.body.warranty_day_2 != null ? Number(req.body.warranty_day_2) : undefined,
-                    cover_photo: req.body.cover_photo != null ? req.body.cover_photo : undefined,
                     asset_status: req.body.asset_status != null ? Number(req.body.asset_status) : undefined,
                     cancel_type: req.body.cancel_type != null ? Number(req.body.cancel_type) : undefined,
                     cancel_date: req.body.cancel_date != null ? new Date(req.body.cancel_date) : undefined,
@@ -466,6 +515,17 @@ const methods = {
 
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     updated_by: "arnonr",
+
+                    cover_photo: pathFile != null ? pathFile : undefined,
+                },
+            });
+
+            await prisma.asset_photo.updateMany({
+                where: {
+                    secret_key: req.body.secret_key,
+                },
+                data: {
+                    asset_id: item.id,
                 },
             });
 

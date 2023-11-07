@@ -1,6 +1,23 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 const $table = "asset_photo";
+
+const prisma = new PrismaClient().$extends({
+    result: {
+        asset_photo: {
+            asset_photo_file: {
+                needs: { asset_photo_file: true },
+                compute(asset_photo) {
+                    let filename = null;
+                    if (asset_photo.asset_photo_file != null) {
+                        asset_photo_file = process.env.PATH_UPLOAD + asset_photo.asset_photo_file;
+                    }
+                    return asset_photo_file;
+                },
+            },
+        },
+    },
+});
 
 const filterData = (req) => {
     let $where = {
@@ -13,18 +30,18 @@ const filterData = (req) => {
 
     if (req.query.asset_id) {
         $where["asset_id"] = parseInt(req.query.asset_id);
-    }    
-    
+    }
+
     if (req.query.secret_key) {
         $where["secret_key"] = {
         contains: req.query.secret_key,
         //   mode: "insensitive",
         };
     }
-  
-    if (req.query.filename) {
-        $where["filename"] = {
-        contains: req.query.filename,
+
+    if (req.query.asset_photo_file) {
+        $where["asset_photo_file"] = {
+        contains: req.query.asset_photo_file,
         //   mode: "insensitive",
         };
     }
@@ -47,7 +64,7 @@ const countDataAndOrder = async (req, $where) => {
     }
 
     //Count
-    
+
     let $count = await prisma[$table].findMany({
         where: $where,
     });
@@ -74,7 +91,7 @@ const selectField = {
     id: true,
     asset_id: true,
     secret_key: true,
-    filename: true,
+    asset_photo_file: true,
     is_active: true,
 };
 
@@ -84,7 +101,7 @@ const methods = {
         try {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
-    
+
             const item = await prisma[$table].findMany({
                 select: selectField,
                 where: $where,
@@ -92,7 +109,7 @@ const methods = {
                 skip: other.$offset,
                 take: other.$perPage,
             });
-    
+
             res.status(200).json({
                 data: item,
                 totalData: other.$count,
@@ -118,15 +135,15 @@ const methods = {
             res.status(404).json({ msg: error.message });
         }
     },
-  
+
     // สร้าง
     async onCreate(req, res) {
-        try { 
+        try {
             const item = await prisma[$table].create({
                 data: {
                     asset_id: req.body.asset_id,
-                    secret_key: req.body.secret_key, 
-                    filename: req.body.filename,                     
+                    secret_key: req.body.secret_key,
+                    asset_photo_file: req.body.asset_photo_file,
                     is_active: Number(req.body.is_active),
                     created_by: "arnonr",
                     updated_by: "arnonr",
@@ -138,25 +155,25 @@ const methods = {
             res.status(400).json({ msg: error.message });
         }
     },
-  
+
     // แก้ไข
     async onUpdate(req, res) {
         try {
-  
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
                 },
-                
+
                 data: {
                     asset_id: req.body.asset_id != null ? req.body.asset_id : undefined,
                     secret_key: req.body.secret_key != null ? req.body.secret_key : undefined,
-                    filename: req.body.filename != null ? req.body.filename : undefined,                 
+                    asset_photo_file: req.body.filenasset_photo_fileame != null ? req.body.asset_photo_file : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     updated_by: "arnonr",
                 },
             });
-  
+
             res.status(200).json({ ...item, msg: "success" });
         } catch (error) {
             res.status(400).json({ msg: error.message });
@@ -174,7 +191,7 @@ const methods = {
                 deleted_at: new Date().toISOString(),
             },
             });
-    
+
             res.status(200).json({
             msg: "success",
             });
@@ -183,5 +200,5 @@ const methods = {
         }
         },
     };
-  
+
     module.exports = { ...methods };

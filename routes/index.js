@@ -9,8 +9,7 @@ const repairHistory = require("./api/repair-history");
 const budgetType = require("./api/budget-type");
 const assetType = require("./api/asset-type");
 const user = require("./api/user");
-// const froala = require("./api/froala");
-
+const froala = require("./api/froala");
 
 const router = express.Router();
 
@@ -25,11 +24,12 @@ router.use(
   router.use("/holder-history", holderHistory),
   router.use("/repair-history", repairHistory),
   router.use("/user", user),
+  router.use("/froala", froala),
 
   // router.use("/news", news),
   // router.use("/news-type", newsType),
 
-  // router.use("/froala", froala),
+
   // router.use("/news-gallery", newsGallery),
 
 );
