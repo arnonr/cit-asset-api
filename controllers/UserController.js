@@ -8,6 +8,7 @@ const iv = crypto.randomBytes(16);
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const axios = require("axios").default;
 // const { expressjwt: jwt1 } = require("express-jwt");
 const $table = "user";
 
@@ -118,44 +119,6 @@ const encrypt = (text) => {
   return hash;
 };
 
-// ปรับ Language
-// const checkLanguage = (req) => {
-//   let prismaLang = prisma.$extends({
-//     result: {
-//       news: {
-//         title: {
-//           needs: { title_th: true },
-//           compute(news) {
-//             return req.query.lang && req.query.lang == "en"
-//               ? news.title_en
-//               : news.title_th;
-//           },
-//         },
-//         detail: {
-//           needs: { detail_th: true },
-//           compute(news) {
-//             return req.query.lang && req.query.lang == "en"
-//               ? news.detail_en
-//               : news.detail_th;
-//           },
-//         },
-//       },
-//       news_type: {
-//         name: {
-//           needs: { name_th: true },
-//           compute(news_type) {
-//             return req.query.lang && req.query.lang == "en"
-//               ? news_type.name_en
-//               : news_type.name_th;
-//           },
-//         },
-//       },
-//     },
-//   });
-
-//   return prismaLang;
-// };
-
 const methods = {
   // ค้นหาทั้งหมด
   async onGetAll(req, res) {
@@ -214,25 +177,6 @@ const methods = {
           updated_by: "arnonr",
         },
       });
-
-      // const profile = await prisma.profile.create({
-      //   data: {
-      //     user_id: Number(item.id),
-      //     prefix: req.body.prefix,
-      //     firstname: req.body.firstname,
-      //     surname: req.body.surname,
-      //     is_publish: Number(req.body.is_publish),
-      //     contact_address: req.body.contact_address,
-      //     invoice_address: req.body.invoice_address,
-      //     invoice_name: req.body.invoice_name,
-      //     member_status: Number(req.body.member_status),
-      //     organization: req.body.organization,
-      //     phone: req.body.phone,
-      //     tax_id: req.body.tax_id,
-      //     created_by: "arnonr",
-      //     updated_by: "arnonr",
-      //   },
-      // });
 
       res.status(201).json({ ...item, ...profile, msg: "success" });
     } catch (error) {
@@ -317,241 +261,33 @@ const methods = {
     }
   },
 
-  async onRegister(req, res) {
-    try {
-      const checkItem = await prisma.user.findFirst({
-        where: {
-          email: req.body.email,
-        },
-      });
+    async onSearchIcitAccount(req, res) {
 
-      if (checkItem) {
-        throw new Error("email is duplicate");
-      }
+        let config = {
+            method: "post",
+            url: "https://api.account.kmutnb.ac.th/api/account-api/user-info",
+            headers: { Authorization: "Bearer " + process.env.ICIT_ACCOUNT_TOKEN },
+            data: { username: req.body.username },
+        };
 
-      const item = await prisma.user.create({
-        data: {
-          group_id: Number(req.body.group_id),
-          email: req.body.email,
-          password: encrypt(req.body.password),
-          status: Number(req.body.status),
-          is_publish: Number(req.body.is_publish),
-          secret_confirm_email: crypto.randomBytes(20).toString("hex"),
-          created_by: "arnonr",
-          updated_by: "arnonr",
-        },
-      });
+        try {
+            let response = await axios(config);
+            console.log(response.data);
+            // console.log(res);
 
-      // const profile = await prisma.profile.create({
-      //   data: {
-      //     user_id: Number(item.id),
-      //     prefix: req.body.prefix,
-      //     firstname: req.body.firstname,
-      //     surname: req.body.surname,
-      //     is_publish: Number(req.body.is_publish),
-      //     contact_address: req.body.contact_address,
-      //     invoice_address: req.body.invoice_address,
-      //     invoice_name: req.body.invoice_name,
-      //     member_status: Number(req.body.member_status),
-      //     organization: req.body.organization,
-      //     phone: req.body.phone,
-      //     tax_id: req.body.tax_id,
-      //     created_by: "arnonr",
-      //     updated_by: "arnonr",
-      //   },
-      // });
+            if (response.data.api_status_code == "201") {
+                res.status(200).json(response.data.userInfo);
+            } else if (response.data.api_status_code == "501") {
+                res.status(404).json({ msg: response.data.api_message });
+            }else{
+                res.status(200).json(response.data);
+            }
+            // res.status(200);
+        } catch (error) {
+            res.status(400).json({ msg: error.message });
+        }
+    },
 
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          // ข้อมูลการเข้าสู่ระบบ
-          user: "cwie@kmutnb.ac.th", // email user ของเรา
-          pass: "xhqqcypawtnyfnhl", // email password
-        },
-      });
-
-      await transporter.sendMail({
-        from: "ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์", // อีเมลผู้ส่ง
-        to: item.email, // อีเมลผู้รับ สามารถกำหนดได้มากกว่า 1 อีเมล โดยขั้นด้วย ,(Comma)
-        subject:
-          "ยืนยันการสมัครสมาชิก ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์", // หัวข้ออีเมล
-        html:
-          "<b>ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์</b><br> โปรดยืนยันการสมัครสมาชิก : <a href='" +
-          process.env.PATH_CLIENT +
-          "confirm-email?id=" +
-          item.id +
-          "&email=" +
-          item.email +
-          "&secret_confirm_email=" +
-          item.secret_confirm_email +
-          "'>คลิก</a>", // html body
-      });
-
-      res.status(201).json({ ...item, ...profile, msg: "success" });
-    } catch (error) {
-      res.status(400).json({ msg: error.message });
-    }
-  },
-
-  async onConfirmEmail(req, res) {
-    try {
-      const item = await prisma.user.findFirst({
-        where: {
-          id: Number(req.body.id),
-          email: req.body.email,
-          secret_confirm_email: req.body.secret_confirm_email,
-        },
-      });
-
-      if (item) {
-        await prisma.user.update({
-          where: {
-            id: item.id,
-          },
-          data: {
-            status: 2,
-          },
-        });
-      } else {
-        throw new Error("Key is Wrong");
-      }
-
-      res.status(201).json({ ...item, msg: "success" });
-    } catch (error) {
-      res.status(400).json({ msg: error.message });
-    }
-  },
-
-  async onResendConfirmEmail(req, res) {
-    try {
-      const item = await prisma.user.findFirst({
-        where: {
-          email: req.body.email,
-        },
-      });
-
-      if (!item) {
-        throw new Error("Email Not Found");
-      }
-
-      let itemUpdate = await prisma.user.update({
-        where: {
-          id: item.id,
-        },
-        data: {
-          secret_confirm_email: crypto.randomBytes(20).toString("hex"),
-        },
-      });
-
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          // ข้อมูลการเข้าสู่ระบบ
-          user: "cwie@kmutnb.ac.th", // email user ของเรา
-          pass: "xhqqcypawtnyfnhl", // email password
-        },
-      });
-
-      await transporter.sendMail({
-        from: "ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์", // อีเมลผู้ส่ง
-        to: itemUpdate.email, // อีเมลผู้รับ สามารถกำหนดได้มากกว่า 1 อีเมล โดยขั้นด้วย ,(Comma)
-        subject:
-          "ยืนยันการสมัครสมาชิก ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์", // หัวข้ออีเมล
-        html:
-          "<b>ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์</b><br> โปรดยืนยันการสมัครสมาชิก : <a href='" +
-          process.env.PATH_CLIENT +
-          "confirm-email?id=" +
-          itemUpdate.id +
-          "&email=" +
-          itemUpdate.email +
-          "&secret_confirm_email=" +
-          itemUpdate.secret_confirm_email +
-          "'>คลิก</a>", // html body
-      });
-
-      res.status(201).json({ ...item, msg: "success", password: undefined });
-    } catch (error) {
-      res.status(400).json({ msg: error.message });
-    }
-  },
-
-  async onResendResetPassword(req, res) {
-    try {
-      const item = await prisma.user.findFirst({
-        where: {
-          email: req.body.email,
-        },
-      });
-
-      if (!item) {
-        throw new Error("Email Not Found");
-      }
-
-      let itemUpdate = await prisma.user.update({
-        where: {
-          id: item.id,
-        },
-        data: {
-          secret_confirm_email: crypto.randomBytes(20).toString("hex"),
-        },
-      });
-
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          // ข้อมูลการเข้าสู่ระบบ
-          user: "cwie@kmutnb.ac.th", // email user ของเรา
-          pass: "xhqqcypawtnyfnhl", // email password
-        },
-      });
-
-      await transporter.sendMail({
-        from: "ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์", // อีเมลผู้ส่ง
-        to: itemUpdate.email, // อีเมลผู้รับ สามารถกำหนดได้มากกว่า 1 อีเมล โดยขั้นด้วย ,(Comma)
-        subject:
-          "ยืนยันการรีเซ็ตรหัสผ่าน ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์", // หัวข้ออีเมล
-        html:
-          "<b>ศูนย์เครื่องมือวิทยาศาสตร์และคอมพิวเตอร์สมรรถนะสูง คณะวิทยาศาสตร์ประยุกต์</b><br> โปรดรีเซ็ตรหัสผ่าน : <a href='" +
-          process.env.PATH_CLIENT +
-          "reset-password?id=" +
-          itemUpdate.id +
-          "&email=" +
-          itemUpdate.email +
-          "&secret_confirm_email=" +
-          itemUpdate.secret_confirm_email +
-          "'>คลิก</a>", // html body
-      });
-
-      res.status(201).json({ ...item, msg: "success", password: undefined });
-    } catch (error) {
-      res.status(400).json({ msg: error.message });
-    }
-  },
-
-  async onResetPassword(req, res) {
-    try {
-      const item = await prisma.user.update({
-        where: {
-          id: Number(req.body.id),
-        },
-        data: {
-          password:
-            req.body.password != null ? encrypt(req.body.password) : undefined,
-          updated_by: "arnonr",
-        },
-      });
-
-      res.status(200).json({ ...item, msg: "success" });
-    } catch (error) {
-      res.status(400).json({ msg: error.message });
-    }
-  },
 };
 
 module.exports = { ...methods };
