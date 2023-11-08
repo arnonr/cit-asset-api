@@ -8,7 +8,7 @@ const prisma = new PrismaClient().$extends({
             asset_photo_file: {
                 needs: { asset_photo_file: true },
                 compute(asset_photo) {
-                    let filename = null;
+                    let asset_photo_file = null;
                     if (asset_photo.asset_photo_file != null) {
                         asset_photo_file = process.env.PATH_UPLOAD + asset_photo.asset_photo_file;
                     }

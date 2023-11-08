@@ -310,7 +310,7 @@ const selectField = {
     asset_photo: {
         select: {
             id: true,
-            filename: true,
+            asset_photo_file: true,
             secret_key: true,
             is_active: true,
         },
