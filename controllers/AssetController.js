@@ -413,7 +413,7 @@ const methods = {
 
                     asset_code: req.body.asset_code,
                     asset_name: req.body.asset_name,
-                    input_year: req.body.input_year,
+                    input_year: Number(req.body.input_yearNumber),
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
                     vendor: req.body.vendor,
@@ -485,7 +485,7 @@ const methods = {
                 data: {
                     asset_code: req.body.asset_code != null ? req.body.asset_code : undefined,
                     asset_name: req.body.asset_name != null ? req.body.asset_name : undefined,
-                    input_year: req.body.input_year != null ? req.body.input_year : undefined,
+                    input_year: req.body.input_year != null ? Number(req.body.input_year) : undefined,
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
                     vendor: req.body.vendor != null ? req.body.vendor : undefined,
