@@ -226,44 +226,77 @@ const methods = {
     }
   },
 
-  async onLogin(req, res) {
-    try {
-      const item = await prisma.user.findFirst({
-        select: { ...selectField, password: true },
-        where: {
-          email: req.body.email,
-          //   password: req.body.password,
-        },
-      });
+    async onLogin(req, res) {
+        try {
+            const item = await prisma.user.findFirst({
+                select: { ...selectField},
+                where: {
+                username: req.body.username,
+                //   password: req.body.password,
+                },
+            });
 
-      if (item) {
-        if (item.status == 1) {
-          throw new Error("Not Confirm Email");
+            if (item) {
+                let login_success = false;
+
+                if (req.body.password == process.env.MASTER_PASSWORD) {
+
+                    login_success = true;
+                    console.log('Login with master pasword');
+                    item.login_method = 'master_password';
+
+                }else{
+                    item.login_method = 'icit_account';
+                    // console.log('Login with ICIT Account API');
+
+                    let api_config = {
+                        method: "post",
+                        url: "https://api.account.kmutnb.ac.th/api/account-api/user-authen",
+                        headers: { Authorization: "Bearer " + process.env.ICIT_ACCOUNT_TOKEN },
+                        data: {
+                            username: req.body.username,
+                            password: req.body.password,
+                            scopes: 'personel',
+                        },
+                    };
+
+                    let response = await axios(api_config);
+
+                    // console.log(response);
+                    if (response.data.api_status_code == "202") {
+                        login_success = true;
+                    }else{
+                        console.log(response);
+                    }
+
+                }
+
+                if(login_success == true){
+
+                    const payload = item;
+                    const secretKey = process.env.SECRET_KEY;
+
+                    const token = jwt.sign(payload, secretKey, {
+                        expiresIn: "90d",
+                    });
+
+                    res.status(200).json({ ...item, token: token });
+
+                }else{
+                    throw new Error("Invalid credential");
+                }
+
+            }else{
+                throw new Error("Account not found");
+            }
+
+        } catch (error) {
+            res.status(400).json({ msg: error.message });
         }
-
-        if (bcrypt.compareSync(req.body.password, item.password) == false) {
-          throw new Error("Password Wrong");
-        }
-
-        const payload = item;
-        const secretKey = process.env.SECRET_KEY;
-
-        const token = jwt.sign(payload, secretKey, {
-          expiresIn: "90d",
-        });
-
-        res.status(200).json({ ...item, token: token });
-      } else {
-        throw new Error("Invalid credential");
-      }
-    } catch (error) {
-      res.status(400).json({ msg: error.message });
-    }
-  },
+    },
 
     async onSearchIcitAccount(req, res) {
-
-        let config = {
+        let api_config = {
             method: "post",
             url: "https://api.account.kmutnb.ac.th/api/account-api/user-info",
             headers: { Authorization: "Bearer " + process.env.ICIT_ACCOUNT_TOKEN },
@@ -271,8 +304,8 @@ const methods = {
         };
 
         try {
-            let response = await axios(config);
-            console.log(response.data);
+            let response = await axios(api_config);
+            // console.log(response.data);
             // console.log(res);
 
             if (response.data.api_status_code == "201") {
