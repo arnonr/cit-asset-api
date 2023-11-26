@@ -144,7 +144,7 @@ const methods = {
                     asset_id: req.body.asset_id,
                     location: req.body.location,
                     status: Number(req.body.status),
-                    approved_at: new Date(req.body.approved_at),
+                    approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by,
                     is_active: Number(req.body.is_active),
                     created_by: "arnonr",

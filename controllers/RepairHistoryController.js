@@ -168,7 +168,7 @@ const methods = {
                     price: Number(req.body.price),
                     status: Number(req.body.status),
                     reject_comment: req.body.reject_comment,
-                    approved_at: new Date(req.body.approved_at),
+                    approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by,
                     is_active: Number(req.body.is_active),
                     created_by: "arnonr",
