@@ -110,6 +110,10 @@ const selectField = {
     approved_at: true,
     approved_by: true,
     is_active: true,
+    created_at: true,
+    created_by: true,
+    updated_at: true,
+    updated_by: true
 };
 
 const methods = {
@@ -164,7 +168,7 @@ const methods = {
                     price: Number(req.body.price),
                     status: Number(req.body.status),
                     reject_comment: req.body.reject_comment,
-                    approved_at: req.body.approved_at,
+                    approved_at: new Date(req.body.approved_at),
                     approved_by: req.body.approved_by,
                     is_active: Number(req.body.is_active),
                     created_by: "arnonr",
@@ -194,7 +198,7 @@ const methods = {
                     price:req.body.price != null ? Number(req.body.price) : undefined,
                     status:req.body.status != null ? Number(req.body.status) : undefined,
                     reject_comment:req.body.reject_comment != null ? Number(req.body.reject_comment) : undefined,
-                    approved_at: req.body.approved_at != null ? req.body.approved_at : undefined,
+                    approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by != null ? req.body.approved_by : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     updated_by: "arnonr",
