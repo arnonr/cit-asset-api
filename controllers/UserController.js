@@ -228,10 +228,19 @@ const methods = {
 
     async onLogin(req, res) {
         try {
-            const item = await prisma.user.findFirst({
+            console.log(req.body.username);
+            if(req.body.username == undefined){
+              throw new Error("Username is undefined");
+            }
+
+            if(req.body.password == undefined){
+              throw new Error("Password is undefined");
+            }
+
+            const item = await prisma.user.findUnique({
                 select: { ...selectField},
                 where: {
-                username: req.body.username,
+                  username: req.body.username,
                 //   password: req.body.password,
                 },
             });
