@@ -410,7 +410,6 @@ const methods = {
 
             const item = await prisma[$table].create({
                 data: {
-
                     asset_code: req.body.asset_code,
                     asset_name: req.body.asset_name,
                     input_year: Number(req.body.input_yearNumber),
@@ -553,7 +552,252 @@ const methods = {
         } catch (error) {
             res.status(400).json({ msg: error.message });
         }
-        },
-    };
+    },
 
-    module.exports = { ...methods };
+    async onImportAsset(req, res) {
+        // console.log(req.body.length);
+        // console.log(req.body);
+        try {
+
+            let import_result = [];
+
+            for(var key in req.body) {
+
+                let asset_code = req.body[key]['asset_code'];
+
+                let asset_name = req.body[key]['asset_name'] != null ? req.body[key]['asset_name'] : undefined;
+
+                let input_year = req.body[key]['input_year'] != null ? Number(req.body[key]['input_year']) : undefined;
+
+                let inspection_date = req.body[key]['inspection_date'] != null ? new Date(eq.body[key]['inspection_date']) : undefined;
+
+                let approved_date = req.body[key]['approved_date'] != null ? new Date(req.body[key]['approved_date']) : undefined;
+
+                let vendor = req.body[key]['vendor'] != null ? req.body[key]['vendor'] : undefined;
+
+                let asset_type_id = req.body[key]['asset_type_id'] != null ? Number(req.body[key]['asset_type_id']) : undefined;
+
+                let brand = req.body[key]['brand'] != null ? req.body[key]['brand'] : undefined;
+
+                let model = req.body[key]['model'] != null ? req.body[key]['model'] : undefined;
+
+                let serial_number = req.body[key]['serial_number'] != null ? req.body[key]['serial_number'] : undefined;
+
+                let price = req.body[key]['price'] != null ? Number(req.body[key]['price']) : undefined;
+
+                let budget_type_id = req.body[key]['budget_type_id'] != null ? Number(req.body[key]['budget_type_id']) : undefined;
+
+                let is_transfer = req.body[key]['is_transfer'] != null ? Number(req.body[key]['is_transfer']) : undefined;
+                let transfer_from = req.body[key]['motransfer_fromdel'] != null ? req.body[key]['transfer_from'] : undefined;
+
+                let location = req.body[key]['location'] != null ? req.body[key]['location'] : undefined;
+
+                let department_id = req.body[key]['department_id'] != null ? Number(req.body[key]['department_id']) : undefined;
+
+                let drawer_name = req.body[key]['drawer_name'] != null ? req.body[key]['drawer_name'] : undefined;
+
+                let holder_name = req.body[key]['holder_name'] != null ? req.body[key]['holder_name'] : undefined;
+
+                let warranty_type_1 = req.body[key]['warranty_type_1'] != null ? req.body[key]['warranty_type_1'] : undefined;
+
+                let warranty_day_1 = req.body[key]['warranty_day_1'] != null ? Number(req.body[key]['warranty_day_1']) : undefined;
+
+                let warranty_type_2 = req.body[key]['warranty_type_2'] != null ? req.body[key]['warranty_type_2'] : undefined;
+
+                let warranty_day_2 = req.body[key]['warranty_day_2'] != null ? Number(req.body[key]['warranty_day_2']) : undefined;
+
+                let asset_status = req.body[key]['asset_status'] != null ? Number(req.body[key]['asset_status']) : undefined;
+
+                let cancel_type = req.body[key]['cancel_type'] != null ? Number(req.body[key]['cancel_type']) : undefined;
+
+                let cancel_date = req.body[key]['cancel_date'] != null ? new Date(req.body[key]['cancel_date']) : undefined;
+
+                let cancel_comment = req.body[key]['cancel_comment'] != null ? req.body[key]['departmecancel_commentnt_id'] : undefined;
+
+                let transfer_to = req.body[key]['transfer_to'] != null ? req.body[key]['transfer_to'] : undefined;
+
+                let transfer_to_department = req.body[key]['transfer_to_department'] != null ? req.body[key]['transfer_to_department'] : undefined;
+
+                let comment = req.body[key]['comment'] != null ? req.body[key]['comment'] : undefined;
+
+                let is_active = req.body[key]['is_active'] != null ? Number(req.body[key]['is_active']) : undefined;
+
+                let import_type = null;
+                let error_message = [];
+                let import_success = false;
+                // console.log(asset_code);
+
+                const assetCheck = await prisma[$table].findUnique({
+                    select: {id: true},
+                    where: {asset_code: asset_code},
+                });
+
+                let input_error = false;
+
+                if(asset_name == undefined){
+                    input_error = true;
+                    error_message.push('asset_name is undefined');
+                }
+
+                if(input_year == undefined){
+                    input_error = true;
+                    error_message.push('input_year is undefined');
+                }
+
+                if(asset_type_id == undefined){
+                    input_error = true;
+                    error_message.push('asset_type_id is undefined');
+                }
+
+                if(budget_type_id == undefined){
+                    input_error = true;
+                    error_message.push('budget_type_id is undefined');
+                }
+
+                if(department_id == undefined){
+                    input_error = true;
+                    error_message.push('department_id is undefined');
+                }
+
+                if(asset_status == undefined){
+                    input_error = true;
+                    error_message.push('asset_status is undefined');
+                }
+
+                if(is_active == undefined){
+                    input_error = true;
+                    error_message.push('is_active is undefined');
+                }
+
+                // console.log(asset_name);
+
+
+
+                if(assetCheck == null){
+                    // console.log("create");
+                    import_type = 'create';
+
+                    if(input_error == false){
+
+                        try {
+                            const item = await prisma[$table].create({
+                                data: {
+                                    asset_code: asset_code,
+                                    asset_name: asset_name,
+                                    input_year: input_year,
+                                    inspection_date: inspection_date,
+                                    approved_date: approved_date,
+                                    vendor: vendor,
+                                    asset_type_id: asset_type_id,
+                                    brand: brand,
+                                    model: model,
+                                    serial_number: serial_number,
+                                    price: price,
+                                    budget_type_id: budget_type_id,
+                                    is_transfer: is_transfer,
+                                    transfer_from: transfer_from,
+                                    location: location,
+                                    department_id: department_id,
+                                    drawer_name: drawer_name,
+                                    holder_name: holder_name,
+                                    warranty_type_1: warranty_type_1,
+                                    warranty_day_1: warranty_day_1,
+                                    warranty_type_2: warranty_type_2,
+                                    warranty_day_2: warranty_day_2,
+                                    asset_status: asset_status,
+                                    cancel_type: cancel_type,
+                                    cancel_date: cancel_date,
+                                    cancel_comment: cancel_comment,
+                                    transfer_to: transfer_to,
+                                    transfer_to_department: transfer_to_department,
+                                    comment: comment,
+                                    is_active: is_active,
+                                    created_by: "arnonr",
+                                    updated_by: "arnonr",
+                                },
+                            });
+
+                            import_success = true;
+
+                        } catch (e) {
+                            // console.log(e.meta);
+                        }
+
+                    }
+
+                }else{
+                    // console.log("update");
+                    import_type = 'update';
+                    const id = assetCheck.id;
+                    // console.log(id);
+                    if(input_error == false){
+                        try{
+
+                            const item = await prisma[$table].update({
+                                where: {
+                                    id: id,
+                                },
+
+                                data: {
+                                    asset_code: asset_code,
+                                    asset_name: asset_name,
+                                    input_year: input_year,
+                                    inspection_date: inspection_date,
+                                    approved_date: approved_date,
+                                    vendor: vendor,
+                                    asset_type_id: asset_type_id,
+                                    brand: brand,
+                                    model: model,
+                                    serial_number: serial_number,
+                                    price: price,
+                                    budget_type_id: budget_type_id,
+                                    is_transfer: is_transfer,
+                                    transfer_from: transfer_from,
+                                    location: location,
+                                    department_id: department_id,
+                                    drawer_name: drawer_name,
+                                    holder_name: holder_name,
+                                    warranty_type_1: warranty_type_1,
+                                    warranty_day_1: warranty_day_1,
+                                    warranty_type_2: warranty_type_2,
+                                    warranty_day_2: warranty_day_2,
+                                    asset_status: asset_status,
+                                    cancel_type: cancel_type,
+                                    cancel_date: cancel_date,
+                                    cancel_comment: cancel_comment,
+                                    transfer_to: transfer_to,
+                                    transfer_to_department: transfer_to_department,
+                                    comment: comment,
+                                    is_active: is_active,
+                                    created_by: "arnonr",
+                                    updated_by: "arnonr",
+                                },
+                            });
+
+                            import_success = true;
+
+                        } catch (e) {
+                            // console.log(e.meta);
+                        }
+                    }
+                }
+
+                import_result[key] = {
+                    asset_code:asset_code,
+                    import_type:import_type,
+                    import_success:import_success,
+                    error_message:error_message,
+                };
+            }
+
+            // console.log(asset);
+
+            res.status(200).json({ data: import_result, msg: " success" });
+        } catch (error) {
+            res.status(404).json({ msg: error.message });
+        }
+    }
+
+};
+
+module.exports = { ...methods };
