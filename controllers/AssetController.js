@@ -44,7 +44,7 @@ const filterData = (req) => {
     }
     // Number
     if (req.query.input_year) {
-        $where["is_active"] = parseInt(req.query.input_year);
+        $where["input_year"] = parseInt(req.query.input_year);
     }
 
     if (req.query.inspection_date) {
