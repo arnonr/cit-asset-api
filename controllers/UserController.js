@@ -29,7 +29,7 @@ const filterData = (req) => {
   }
 
   if (req.query.name) {
-    $where["name"] = req.query.name;
+    $where["name"] =  {contains: req.query.name};
   }
 
   if (req.query.email) {
@@ -37,15 +37,11 @@ const filterData = (req) => {
   }
 
   if (req.query.tel) {
-    $where["tel"] = req.query.tel;
+    $where["tel"] = {contains: req.query.tel};
   }
 
   if (req.query.level) {
     $where["level"] = parseInt(req.query.level);
-  }
-
-  if (req.query.secret_confirm_email) {
-    $where["secret_confirm_email"] = req.query.secret_confirm_email;
   }
 
   if (req.query.department_id) {
