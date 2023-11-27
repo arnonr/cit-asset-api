@@ -284,7 +284,7 @@ const methods = {
 
   async onLogin(req, res) {
     try {
-      const item = await prisma.user.findFirst({
+      const item = await prisma.user.findUnique({
         select: { ...selectField, password: true },
         where: {
           email: req.body.email,
@@ -319,7 +319,7 @@ const methods = {
 
   async onRegister(req, res) {
     try {
-      const checkItem = await prisma.user.findFirst({
+      const checkItem = await prisma.user.findUnique({
         where: {
           email: req.body.email,
         },

@@ -178,7 +178,7 @@ const methods = {
         },
       });
 
-      res.status(201).json({ ...item, ...profile, msg: "success" });
+      res.status(201).json({ ...item, msg: "success" });
     } catch (error) {
       res.status(400).json({ msg: error.message });
     }
