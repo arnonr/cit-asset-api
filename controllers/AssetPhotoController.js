@@ -93,6 +93,13 @@ const selectField = {
     secret_key: true,
     asset_photo_file: true,
     is_active: true,
+    asset: {
+        select: {
+            id: true,
+            asset_code: true,
+            asset_name: true,
+        },
+    },
 };
 
 const methods = {

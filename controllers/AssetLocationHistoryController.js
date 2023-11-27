@@ -92,7 +92,14 @@ const selectField = {
     created_at: true,
     created_by: true,
     updated_at: true,
-    updated_by: true
+    updated_by: true,
+    asset: {
+        select: {
+            id: true,
+            asset_code: true,
+            asset_name: true,
+        },
+    },
 };
 
 const methods = {

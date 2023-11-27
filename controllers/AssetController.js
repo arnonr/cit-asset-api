@@ -16,6 +16,28 @@ const prisma = new PrismaClient().$extends({
                     return cover_photo;
                 },
             },
+            expire_date_1: {
+                compute(asset) {
+                    if(asset.approved_date == null || asset.warranty_day_1 == null)
+                        return null;
+
+                    let expire_date = new Date(asset.approved_date);
+                    expire_date.setDate(expire_date.getDate() + asset.warranty_day_1);
+
+                    return expire_date;
+                },
+            },
+            expire_date_2: {
+                compute(asset) {
+                    if(asset.approved_date == null || asset.warranty_day_2 == null)
+                        return null;
+
+                    let expire_date = new Date(asset.approved_date);
+                    expire_date.setDate(expire_date.getDate() + asset.warranty_day_2);
+
+                    return expire_date;
+                },
+            },
         },
     },
 });
@@ -251,6 +273,8 @@ const countDataAndOrder = async (req, $where) => {
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
+    expire_date_1: true,
+    expire_date_2: true,
     id: true,
     asset_code: true,
     asset_name: true,
@@ -282,6 +306,7 @@ const selectField = {
     transfer_to: true,
     transfer_to_department: true,
     comment: true,
+
     is_active: true,
     asset_type: {
         select: {
