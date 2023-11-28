@@ -16,28 +16,28 @@ const prisma = new PrismaClient().$extends({
                     return cover_photo;
                 },
             },
-            expire_date_1: {
-                compute(asset) {
-                    if(asset.approved_date == null || asset.warranty_day_1 == null)
-                        return null;
+            // expire_date_1: {
+            //     compute(asset) {
+            //         if(asset.approved_date == null || asset.warranty_day_1 == null)
+            //             return null;
 
-                    let expire_date = new Date(asset.approved_date);
-                    expire_date.setDate(expire_date.getDate() + asset.warranty_day_1);
+            //         let expire_date = new Date(asset.approved_date);
+            //         expire_date.setDate(expire_date.getDate() + asset.warranty_day_1);
 
-                    return expire_date;
-                },
-            },
-            expire_date_2: {
-                compute(asset) {
-                    if(asset.approved_date == null || asset.warranty_day_2 == null)
-                        return null;
+            //         return expire_date;
+            //     },
+            // },
+            // expire_date_2: {
+            //     compute(asset) {
+            //         if(asset.approved_date == null || asset.warranty_day_2 == null)
+            //             return null;
 
-                    let expire_date = new Date(asset.approved_date);
-                    expire_date.setDate(expire_date.getDate() + asset.warranty_day_2);
+            //         let expire_date = new Date(asset.approved_date);
+            //         expire_date.setDate(expire_date.getDate() + asset.warranty_day_2);
 
-                    return expire_date;
-                },
-            },
+            //         return expire_date;
+            //     },
+            // },
         },
     },
 });
@@ -235,11 +235,29 @@ const filterData = (req) => {
         $where["is_active"] = parseInt(req.query.is_active);
     }
 
-    // if (req.query.expire_day) {
-    //     $where["approved_date"] = {
-    //         lte: new Date()
-    //     }
-    // }
+    if (req.query.expire_day) {
+        let date = new Date();
+        date.setDate(date.getDate() + Number(req.query.expire_day));
+        console.log(date);
+
+        $where["OR"] = [
+            {
+                expiry_date_1: {
+                    lte: date,
+                    gte: new Date()
+                },
+            },
+            {
+                expiry_date_2: {
+                    lte: date,
+                    gte: new Date()
+                },
+            },
+        ]
+        // $where["expiry_date_1"] = {
+        //     gte: date
+        // }
+    }
 
     return $where;
 };
@@ -279,8 +297,8 @@ const countDataAndOrder = async (req, $where) => {
 
 // ฟิลด์ที่ต้องการ Select รวมถึง join
 const selectField = {
-    expire_date_1: true,
-    expire_date_2: true,
+    // expire_date_1: true,
+    // expire_date_2: true,
     id: true,
     asset_code: true,
     asset_name: true,
@@ -312,6 +330,8 @@ const selectField = {
     transfer_to: true,
     transfer_to_department: true,
     comment: true,
+    expiry_date_1: true,
+    expiry_date_2: true,
 
     is_active: true,
     asset_type: {
@@ -390,7 +410,7 @@ const methods = {
         try {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
-
+            console.log($where);
             const item = await prisma[$table].findMany({
                 select: selectField,
                 where: $where,
@@ -439,6 +459,22 @@ const methods = {
                 return res.status(500).send("error");
             }
 
+            let expiry_date_1 = null;
+            let expiry_date_2 = null;
+
+            if(req.body.approved_date != null && req.body.warranty_day_1 != null){
+                let expire_date1 = new Date(req.body.approved_date);
+                expire_date1.setDate(expire_date1.getDate() +  Number(req.body.warranty_day_1));
+                expiry_date_1 = expire_date1;
+
+            }
+
+            if(req.body.approved_date != null && req.body.warranty_day_2 != null){
+                let expire_date2 = new Date(req.body.approved_date);
+                expire_date2.setDate(expire_date2.getDate() + Number(req.body.warranty_day_2));
+                expiry_date_2 = expire_date2;
+            }
+
             const item = await prisma[$table].create({
                 data: {
                     asset_code: req.body.asset_code,
@@ -475,6 +511,9 @@ const methods = {
                     is_active: Number(req.body.is_active),
                     created_by: "arnonr",
                     updated_by: "arnonr",
+
+                    expiry_date_1 : expiry_date_1 != null ? expiry_date_1 : undefined,
+                    expiry_date_2 : expiry_date_2 != null ? expiry_date_2 : undefined,
                 },
             });
 
@@ -505,6 +544,22 @@ const methods = {
 
             if (pathFile == "error") {
                 return res.status(500).send("error");
+            }
+
+            let expiry_date_1 = null;
+            let expiry_date_2 = null;
+
+            if(req.body.approved_date != null && req.body.warranty_day_1 != null){
+                let expire_date1 = new Date(req.body.approved_date);
+                expire_date1.setDate(expire_date1.getDate() +  Number(req.body.warranty_day_1));
+                expiry_date_1 = expire_date1;
+
+            }
+
+            if(req.body.approved_date != null && req.body.warranty_day_2 != null){
+                let expire_date2 = new Date(req.body.approved_date);
+                expire_date2.setDate(expire_date2.getDate() + Number(req.body.warranty_day_2));
+                expiry_date_2 = expire_date2;
             }
 
             const item = await prisma[$table].update({
@@ -545,8 +600,9 @@ const methods = {
 
                     is_active: req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     updated_by: "arnonr",
-
                     cover_photo: pathFile != null ? pathFile : undefined,
+                    expiry_date_1 : expiry_date_1 != null ? expiry_date_1 : undefined,
+                    expiry_date_2 : expiry_date_2 != null ? expiry_date_2 : undefined,
                 },
             });
 

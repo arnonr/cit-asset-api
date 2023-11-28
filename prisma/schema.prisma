@@ -32,8 +32,10 @@ model asset {
     holder_name          String?        @db.VarChar(200)
     warranty_type_1      String?        @db.VarChar(200)
     warranty_day_1       Int?
+    expiry_date_1        DateTime?      @db.Date
     warranty_type_2      String?        @db.VarChar(200)
     warranty_day_2       Int?
+    expiry_date_2        DateTime?      @db.Date
     cover_photo          String?        @db.VarChar(200)
     asset_status         Int?           @db.TinyInt
     cancel_type          Int?           @db.TinyInt
