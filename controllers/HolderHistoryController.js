@@ -5,6 +5,7 @@ const $table = "holder_history";
 const filterData = (req) => {
     let $where = {
         deleted_at: null,
+        asset: {}
     };
 
     if (req.query.id) {
@@ -42,6 +43,50 @@ const filterData = (req) => {
 
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
+    }
+
+    if (req.query.asset_code) {
+        $where["asset"]["asset_code"] = {
+            contains: req.query.asset_code,
+        };
+    }
+
+    if (req.query.asset_name) {
+        $where["asset"]["asset_name"] = {
+            contains: req.query.asset_name,
+        };
+    }
+
+    if (req.query.input_year) {
+        $where["asset"]["input_year"] = parseInt(req.query.input_year);
+    }
+
+    if (req.query.department_id) {
+        $where["asset"]["department_id"] = parseInt(req.query.department_id);
+    }
+
+    if (req.query.drawer_name) {
+        $where["asset"]["drawer_name"] = {
+            contains: req.query.drawer_name,
+        };
+    }
+
+    if (req.query.holder_name) {
+        $where["asset"]["holder_name"] = {
+            contains: req.query.holder_name,
+        };
+    }
+
+    if (req.query.asset_status) {
+        $where["asset"]["asset_status"] = parseInt(req.query.asset_status);
+    }
+
+    if (req.query.budget_type_id) {
+        $where["asset"]["budget_type_id"] = parseInt(req.query.budget_type_id);
+    }
+
+    if (req.query.asset_type_id) {
+        $where["asset"]["asset_type_id"] = parseInt(req.query.asset_type_id);
     }
 
     return $where;
