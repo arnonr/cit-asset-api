@@ -235,6 +235,12 @@ const filterData = (req) => {
         $where["is_active"] = parseInt(req.query.is_active);
     }
 
+    // if (req.query.expire_day) {
+    //     $where["approved_date"] = {
+    //         lte: new Date()
+    //     }
+    // }
+
     return $where;
 };
 
@@ -437,7 +443,7 @@ const methods = {
                 data: {
                     asset_code: req.body.asset_code,
                     asset_name: req.body.asset_name,
-                    input_year: Number(req.body.input_yearNumber),
+                    input_year: Number(req.body.input_year),
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
                     vendor: req.body.vendor,
