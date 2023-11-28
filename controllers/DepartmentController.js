@@ -154,7 +154,7 @@ const methods = {
                 data: {
                     code: req.body.code != null ? req.body.code : undefined,
                     name: req.body.name != null ? req.body.name : undefined,
-                    name: req.body.name_abbr != null ? req.body.name_abbr : undefined,
+                    name_abbr: req.body.name_abbr != null ? req.body.name_abbr : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     updated_by: "arnonr",
                 },
