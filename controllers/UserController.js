@@ -158,6 +158,10 @@ const methods = {
 
   // สร้าง
   async onCreate(req, res) {
+
+    const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+    let authUsername = decoded.username;
+
     try {
       const item = await prisma.user.create({
         data: {
@@ -169,8 +173,8 @@ const methods = {
           department_id: Number(req.body.department_id),
           // password: req.body.password,
           is_active: Number(req.body.is_active),
-          created_by: "arnonr",
-          updated_by: "arnonr",
+          created_by: authUsername,
+          updated_by: authUsername,
         },
       });
 
@@ -182,6 +186,10 @@ const methods = {
 
   // แก้ไข
   async onUpdate(req, res) {
+
+    const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+    let authUsername = decoded.username;
+
     try {
       const item = await prisma.user.update({
         where: {
@@ -196,6 +204,7 @@ const methods = {
           level:req.body.level != null ? Number(req.body.level) : undefined,
           department_id:req.body.department_id != null ? Number(req.body.department_id) : undefined,
           is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
+          updated_by: authUsername,
         },
       });
 

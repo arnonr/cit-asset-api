@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 // const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
 const $table = "asset_photo";
 
 const prisma = new PrismaClient().$extends({
@@ -145,6 +146,10 @@ const methods = {
 
     // สร้าง
     async onCreate(req, res) {
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
             const item = await prisma[$table].create({
                 data: {
@@ -152,8 +157,8 @@ const methods = {
                     secret_key: req.body.secret_key,
                     asset_photo_file: req.body.asset_photo_file,
                     is_active: Number(req.body.is_active),
-                    created_by: "arnonr",
-                    updated_by: "arnonr",
+                    created_by: authUsername,
+                    updated_by: authUsername,
                 },
             });
 
@@ -165,6 +170,10 @@ const methods = {
 
     // แก้ไข
     async onUpdate(req, res) {
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
 
             const item = await prisma[$table].update({
@@ -177,7 +186,7 @@ const methods = {
                     secret_key: req.body.secret_key != null ? req.body.secret_key : undefined,
                     asset_photo_file: req.body.filenasset_photo_fileame != null ? req.body.asset_photo_file : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
-                    updated_by: "arnonr",
+                    updated_by: authUsername,
                 },
             });
 

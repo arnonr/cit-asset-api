@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
 const $table = "asset_type";
 
 const filterData = (req) => {
@@ -124,6 +125,10 @@ const methods = {
 
     // สร้าง
     async onCreate(req, res) {
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
             const item = await prisma[$table].create({
                 data: {
@@ -131,8 +136,8 @@ const methods = {
                     name: req.body.name,
                     name_abbr: req.body.name_abbr,
                     is_active: Number(req.body.is_active),
-                    created_by: "arnonr",
-                    updated_by: "arnonr",
+                    created_by: authUsername,
+                    updated_by: authUsername,
                 },
             });
 
@@ -144,6 +149,10 @@ const methods = {
 
     // แก้ไข
     async onUpdate(req, res) {
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
 
             const item = await prisma[$table].update({
@@ -156,7 +165,7 @@ const methods = {
                     name: req.body.name != null ? req.body.name : undefined,
                     name_abbr: req.body.name_abbr != null ? req.body.name_abbr : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
-                    updated_by: "arnonr",
+                    updated_by: authUsername,
                 },
             });
 

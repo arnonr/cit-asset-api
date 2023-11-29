@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const uploadController = require("./UploadsController");
 // const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
 const $table = "asset";
 
 const prisma = new PrismaClient().$extends({
@@ -404,7 +405,7 @@ const selectField = {
     },
 };
 
-const autoCreateHolderHistory = async (asset_id, holder_name) => {
+const autoCreateHolderHistory = async (asset_id, holder_name, username) => {
 
     const countResult = await prisma.holder_history.count({
         where: {
@@ -420,10 +421,10 @@ const autoCreateHolderHistory = async (asset_id, holder_name) => {
                 holder_name: holder_name,
                 status: 1,
                 approved_at: new Date(),
-                // approved_by: req.body.approved_by,
+                approved_by: username,
                 is_active: 1,
-                created_by: "arnonr",
-                updated_by: "arnonr",
+                created_by: username,
+                updated_by: username,
             },
         });
 
@@ -431,7 +432,7 @@ const autoCreateHolderHistory = async (asset_id, holder_name) => {
 
 }
 
-const autoCreateLocationHistory = async (asset_id, location) => {
+const autoCreateLocationHistory = async (asset_id, location, username) => {
 
     const countResult = await prisma.asset_location_history.count({
         where: {
@@ -447,10 +448,10 @@ const autoCreateLocationHistory = async (asset_id, location) => {
                 location: location,
                 status: 1,
                 approved_at: new Date(),
-                // approved_by: req.body.approved_by,
+                approved_by: username,
                 is_active: 1,
-                created_by: "arnonr",
-                updated_by: "arnonr",
+                created_by: username,
+                updated_by: username,
             },
         });
 
@@ -501,6 +502,10 @@ const methods = {
 
     // สร้าง
     async onCreate(req, res) {
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
 
             let pathFile = await uploadController.onUploadFile(
@@ -563,8 +568,8 @@ const methods = {
                     comment: req.body.comment,
 
                     is_active: Number(req.body.is_active),
-                    created_by: "arnonr",
-                    updated_by: "arnonr",
+                    created_by: authUsername,
+                    updated_by: authUsername,
 
                     expiry_date_1 : expiry_date_1 != null ? expiry_date_1 : undefined,
                     expiry_date_2 : expiry_date_2 != null ? expiry_date_2 : undefined,
@@ -580,8 +585,8 @@ const methods = {
                 },
             });
 
-            await autoCreateLocationHistory(item.id, req.body.location);
-            await autoCreateHolderHistory(item.id, req.body.holder_name);
+            await autoCreateLocationHistory(item.id, req.body.location, authUsername);
+            await autoCreateHolderHistory(item.id, req.body.holder_name, authUsername);
 
             res.status(201).json({ ...item, msg: "success" });
         } catch (error) {
@@ -591,6 +596,10 @@ const methods = {
 
     // แก้ไข
     async onUpdate(req, res) {
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
 
             let pathFile = await uploadController.onUploadFile(
@@ -659,6 +668,8 @@ const methods = {
                     cover_photo: pathFile != null ? pathFile : undefined,
                     expiry_date_1 : expiry_date_1 != null ? expiry_date_1 : undefined,
                     expiry_date_2 : expiry_date_2 != null ? expiry_date_2 : undefined,
+                    updated_by: authUsername,
+                    updated_at: new Date(),
                 },
             });
 
@@ -671,8 +682,8 @@ const methods = {
                 },
             });
 
-            await autoCreateLocationHistory(item.id, req.body.location);
-            await autoCreateHolderHistory(item.id, req.body.holder_name);
+            await autoCreateLocationHistory(item.id, req.body.location, authUsername);
+            await autoCreateHolderHistory(item.id, req.body.holder_name, authUsername);
 
             res.status(200).json({ ...item, msg: "success" });
         } catch (error) {
@@ -703,6 +714,10 @@ const methods = {
     async onImportAsset(req, res) {
         // console.log(req.body.length);
         // console.log(req.body);
+
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        let authUsername = decoded.username;
+
         try {
 
             let import_result = [];
@@ -863,8 +878,8 @@ const methods = {
                                 },
                             });
 
-                            await autoCreateLocationHistory(item.id, location);
-                            await autoCreateHolderHistory(item.id, holder_name);
+                            await autoCreateLocationHistory(item.id, location, authUsername);
+                            await autoCreateHolderHistory(item.id, holder_name, authUsername);
 
                             import_success = true;
 
