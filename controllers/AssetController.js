@@ -404,6 +404,60 @@ const selectField = {
     },
 };
 
+const autoCreateHolderHistory = async (asset_id, holder_name) => {
+
+    const countResult = await prisma.holder_history.count({
+        where: {
+            asset_id: asset_id,
+        },
+    });
+
+    if(countResult == 0 && holder_name != null) {
+
+        const item = await prisma.holder_history.create({
+            data: {
+                asset_id: asset_id,
+                holder_name: holder_name,
+                status: 1,
+                approved_at: new Date(),
+                // approved_by: req.body.approved_by,
+                is_active: 1,
+                created_by: "arnonr",
+                updated_by: "arnonr",
+            },
+        });
+
+    }
+
+}
+
+const autoCreateLocationHistory = async (asset_id, location) => {
+
+    const countResult = await prisma.asset_location_history.count({
+        where: {
+            asset_id: asset_id,
+        },
+    });
+
+    if(countResult == 0 && location != null) {
+
+        const item = await prisma.asset_location_history.create({
+            data: {
+                asset_id: asset_id,
+                location: location,
+                status: 1,
+                approved_at: new Date(),
+                // approved_by: req.body.approved_by,
+                is_active: 1,
+                created_by: "arnonr",
+                updated_by: "arnonr",
+            },
+        });
+
+    }
+
+}
+
 const methods = {
     // ค้นหาทั้งหมด
     async onGetAll(req, res) {
@@ -526,6 +580,9 @@ const methods = {
                 },
             });
 
+            await autoCreateLocationHistory(item.id, req.body.location);
+            await autoCreateHolderHistory(item.id, req.body.holder_name);
+
             res.status(201).json({ ...item, msg: "success" });
         } catch (error) {
             res.status(400).json({ msg: error.message });
@@ -553,7 +610,6 @@ const methods = {
                 let expire_date1 = new Date(req.body.approved_date);
                 expire_date1.setDate(expire_date1.getDate() +  Number(req.body.warranty_day_1));
                 expiry_date_1 = expire_date1;
-
             }
 
             if(req.body.approved_date != null && req.body.warranty_day_2 != null){
@@ -614,6 +670,9 @@ const methods = {
                     asset_id: item.id,
                 },
             });
+
+            await autoCreateLocationHistory(item.id, req.body.location);
+            await autoCreateHolderHistory(item.id, req.body.holder_name);
 
             res.status(200).json({ ...item, msg: "success" });
         } catch (error) {
@@ -803,6 +862,9 @@ const methods = {
                                     updated_by: "arnonr",
                                 },
                             });
+
+                            await autoCreateLocationHistory(item.id, location);
+                            await autoCreateHolderHistory(item.id, holder_name);
 
                             import_success = true;
 
