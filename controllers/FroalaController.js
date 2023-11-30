@@ -61,8 +61,11 @@ const methods = {
 
   async onUploadUppy(req, res) {
 
-    const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-    let authUsername = decoded.username;
+    let authUsername = null;
+    if(req.headers.authorization !== undefined){
+        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+        authUsername = decoded.username;
+    }
 
     try {
       let table_name = req.body.table_name;

@@ -126,8 +126,11 @@ const methods = {
     // สร้าง
     async onCreate(req, res) {
 
-        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-        let authUsername = decoded.username;
+        let authUsername = null;
+        if(req.headers.authorization !== undefined){
+            const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+            authUsername = decoded.username;
+        }
 
         try {
             const item = await prisma[$table].create({
@@ -150,8 +153,11 @@ const methods = {
     // แก้ไข
     async onUpdate(req, res) {
 
-        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-        let authUsername = decoded.username;
+        let authUsername = null;
+        if(req.headers.authorization !== undefined){
+            const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+            authUsername = decoded.username;
+        }
 
         try {
 
