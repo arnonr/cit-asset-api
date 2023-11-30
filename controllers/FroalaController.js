@@ -1,5 +1,6 @@
 const uploadController = require("./UploadsController");
 const { PrismaClient } = require("@prisma/client");
+const jwt = require("jsonwebtoken");
 const prisma = new PrismaClient();
 
 const methods = {
@@ -59,6 +60,10 @@ const methods = {
   },
 
   async onUploadUppy(req, res) {
+
+    const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+    let authUsername = decoded.username;
+
     try {
       let table_name = req.body.table_name;
 
@@ -78,9 +83,11 @@ const methods = {
             : null;
         data[table_name + "_photo_file"] = pathFile;
         data["secret_key"] = req.body.secret_key;
+        // data["asset_id"] =
         // data["is_publish"] = 1;
-        data["created_by"] = "arnonr";
-        data["updated_by"] = "arnonr";
+        data["created_by"] = authUsername;
+        data["updated_by"] = authUsername;
+        // console.log(data)
 
         const item = await prisma[table_name + "_photo"].create({
           data: data,
