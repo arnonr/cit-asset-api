@@ -752,7 +752,7 @@ const methods = {
 
                 let serial_number = req.body[key]['serial_number'] != null ? req.body[key]['serial_number'] : undefined;
 
-                let price = req.body[key]['price'] != null ? Number(req.body[key]['price']) : undefined;
+                let price = req.body[key]['price'] != null ? Number(req.body[key]['price'].replace(/,/g,'')) : undefined;
 
                 let budget_type_id = req.body[key]['budget_type_id'] != null ? Number(req.body[key]['budget_type_id']) : undefined;
 
@@ -790,6 +790,8 @@ const methods = {
                 let comment = req.body[key]['comment'] != null ? req.body[key]['comment'] : undefined;
 
                 let is_active = 1;
+                // price = price.replace(/,/g,'');
+                console.log(price);
 
                 let import_type = null;
                 let error_message = [];
