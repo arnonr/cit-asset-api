@@ -970,7 +970,7 @@ const methods = {
 
             // console.log(asset);
 
-            res.status(200).json({ data: import_result, msg: " success" });
+            res.status(200).json({ data: import_result, msg: "success" });
         } catch (error) {
             res.status(404).json({ msg: error.message });
         }
