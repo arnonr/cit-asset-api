@@ -6,5 +6,5 @@
 
 */
 -- AlterTable
-ALTER TABLE `asset_photo` DROP COLUMN `filename`,
-    ADD COLUMN `asset_gallery_file` VARCHAR(200) NOT NULL;
+-- ALTER TABLE `asset_photo` DROP COLUMN `filename`,
+--    ADD COLUMN `asset_gallery_file` VARCHAR(200) NOT NULL;

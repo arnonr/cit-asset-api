@@ -787,7 +787,7 @@ const methods = {
 
                 let comment = req.body[key]['comment'] != null ? req.body[key]['comment'] : undefined;
 
-                let is_active = req.body[key]['is_active'] != null ? Number(req.body[key]['is_active']) : undefined;
+                let is_active = 1;
 
                 let import_type = null;
                 let error_message = [];

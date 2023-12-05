@@ -64,7 +64,7 @@ CREATE TABLE `asset_photo` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `asset_id` INTEGER NULL,
     `secret_key` VARCHAR(255) NOT NULL,
-    `filename` VARCHAR(200) NOT NULL,
+    `asset_photo_file` VARCHAR(200) NOT NULL,
     `is_active` INTEGER NOT NULL DEFAULT 1,
     `created_at` DATETIME(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
     `created_by` VARCHAR(255) NOT NULL,
