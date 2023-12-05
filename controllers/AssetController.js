@@ -738,7 +738,7 @@ const methods = {
 
                 let input_year = req.body[key]['input_year'] != null ? Number(req.body[key]['input_year']) : undefined;
 
-                let inspection_date = req.body[key]['inspection_date'] != null ? new Date(eq.body[key]['inspection_date']) : undefined;
+                let inspection_date = req.body[key]['inspection_date'] != null ? new Date(req.body[key]['inspection_date']) : undefined;
 
                 let approved_date = req.body[key]['approved_date'] != null ? new Date(req.body[key]['approved_date']) : undefined;
 
@@ -791,7 +791,6 @@ const methods = {
 
                 let is_active = 1;
                 // price = price.replace(/,/g,'');
-                console.log(price);
 
                 let import_type = null;
                 let error_message = [];
