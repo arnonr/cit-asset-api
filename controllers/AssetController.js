@@ -720,9 +720,11 @@ const methods = {
     async onImportAsset(req, res) {
         // console.log(req.body.length);
         // console.log(req.body);
-
-        const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
-        let authUsername = decoded.username;
+        let authUsername = null;
+        if(req.headers.authorization !== undefined){
+            const decoded = jwt.decode(req.headers.authorization.split(" ")[1]);
+            authUsername = decoded.username;
+        }
 
         try {
 
