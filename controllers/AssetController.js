@@ -790,6 +790,8 @@ const methods = {
                 let comment = req.body[key]['comment'] != null ? req.body[key]['comment'] : undefined;
 
                 let is_active = 1;
+
+                asset_status = 1;
                 // price = price.replace(/,/g,'');
 
                 let import_type = null;
