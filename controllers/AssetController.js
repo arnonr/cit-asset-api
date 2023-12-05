@@ -802,12 +802,17 @@ const methods = {
                 let import_success = false;
                 // console.log(asset_code);
 
+                let input_error = false;
+
+                if(asset_code == undefined){
+                    input_error = true;
+                    error_message.push('asset_code is undefined');
+                }
+
                 const assetCheck = await prisma[$table].findUnique({
                     select: {id: true},
                     where: {asset_code: asset_code},
                 });
-
-                let input_error = false;
 
                 if(asset_name == undefined){
                     input_error = true;
