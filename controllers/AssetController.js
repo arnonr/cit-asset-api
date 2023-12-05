@@ -792,6 +792,9 @@ const methods = {
                 let is_active = 1;
 
                 asset_status = 1;
+                budget_type_id = 1;
+                department_id = 1;
+                asset_type_id = 1;
                 // price = price.replace(/,/g,'');
 
                 let import_type = null;
