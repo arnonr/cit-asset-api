@@ -898,7 +898,7 @@ const methods = {
                             import_success = true;
 
                         } catch (e) {
-                            // console.log(e.meta);
+                            console.log(e);
                         }
 
                     }
@@ -955,7 +955,7 @@ const methods = {
                             import_success = true;
 
                         } catch (e) {
-                            // console.log(e.meta);
+                            console.log(meta);
                         }
                     }
                 }
