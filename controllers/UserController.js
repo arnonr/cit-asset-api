@@ -239,7 +239,7 @@ const methods = {
 
     async onLogin(req, res) {
         try {
-            console.log(req.body.username);
+
             if(req.body.username == undefined){
               throw new Error("Username is undefined");
             }
@@ -252,7 +252,6 @@ const methods = {
                 select: { ...selectField},
                 where: {
                   username: req.body.username,
-                //   password: req.body.password,
                 },
             });
 
@@ -262,7 +261,7 @@ const methods = {
                 if (req.body.password == process.env.MASTER_PASSWORD) {
 
                     login_success = true;
-                    console.log('Login with master pasword');
+                    // console.log('Login with master pasword');
                     item.login_method = 'master_password';
 
                 }else{
@@ -285,8 +284,10 @@ const methods = {
                     // console.log(response);
                     if (response.data.api_status_code == "202") {
                         login_success = true;
+                    }else if(response.data.api_status == 'fail'){
+                      throw new Error(response.data.api_message);
                     }else{
-                        console.log(response);
+                      console.log(response.data);
                     }
 
                 }

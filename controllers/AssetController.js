@@ -2,6 +2,8 @@ const { PrismaClient } = require("@prisma/client");
 const uploadController = require("./UploadsController");
 // const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
+const dayjs = require('dayjs')
+
 const $table = "asset";
 
 const prisma = new PrismaClient().$extends({
@@ -239,8 +241,6 @@ const filterData = (req) => {
     if (req.query.expire_day) {
         let date = new Date();
         date.setDate(date.getDate() + Number(req.query.expire_day));
-        console.log(date);
-
         $where["OR"] = [
             {
                 expiry_date_1: {
@@ -255,9 +255,42 @@ const filterData = (req) => {
                 },
             },
         ]
-        // $where["expiry_date_1"] = {
-        //     gte: date
-        // }
+    }
+
+    if (req.query.created_at_from && req.query.created_at_to) {
+
+        let date_from = new Date(req.query.created_at_from + "T00:00:00.000+0000").toISOString();
+        let date_to = new Date(req.query.created_at_to + "T23:59:59.000+0000").toISOString();
+        console.log(date_from);
+        console.log(date_to);
+
+        $where["AND"] = [
+            {
+                created_at: {
+                    gte: date_from
+                },
+            },
+            {
+                created_at: {
+                    lte: date_to
+                },
+            },
+        ];
+
+    }else if(req.query.created_at_from){
+
+        let date_from = new Date(req.query.created_at_from + "T00:00:00.000+0000").toISOString();
+        $where["created_at"] = {
+            gte: date_from,
+        };
+
+    }else if(req.query.created_at_to){
+
+        let date_to = new Date(req.query.created_at_to + "T23:59:59.000+0000").toISOString();
+        $where["created_at"] = {
+            lte: date_to,
+        };
+
     }
 
     return $where;
@@ -333,7 +366,10 @@ const selectField = {
     comment: true,
     expiry_date_1: true,
     expiry_date_2: true,
-
+    created_by: true,
+    created_at: true,
+    updated_by: true,
+    updated_at: true,
     is_active: true,
     asset_type: {
         select: {
@@ -465,7 +501,7 @@ const methods = {
         try {
             let $where = filterData(req);
             let other = await countDataAndOrder(req, $where);
-            console.log($where);
+            // console.log($where);
             const item = await prisma[$table].findMany({
                 select: selectField,
                 where: $where,
@@ -809,11 +845,6 @@ const methods = {
                     error_message.push('asset_code is undefined');
                 }
 
-                const assetCheck = await prisma[$table].findUnique({
-                    select: {id: true},
-                    where: {asset_code: asset_code},
-                });
-
                 if(asset_name == undefined){
                     input_error = true;
                     error_message.push('asset_name is undefined');
@@ -851,7 +882,10 @@ const methods = {
 
                 // console.log(asset_name);
 
-
+                const assetCheck = await prisma[$table].findUnique({
+                    select: {id: true},
+                    where: {asset_code: asset_code},
+                });
 
                 if(assetCheck == null){
                     // console.log("create");
