@@ -39,6 +39,10 @@ const filterData = (req) => {
         $where["status"] = parseInt(req.query.status);
     }
 
+    if (req.query.is_notice) {
+        $where["is_notice"] = parseInt(req.query.is_notice);
+    }
+
     if (req.query.reject_comment) {
         $where["reject_comment"] = {
         contains: req.query.reject_comment,
@@ -152,6 +156,7 @@ const selectField = {
     description: true,
     price: true,
     status: true,
+    is_notice: true,
     reject_comment: true,
     approved_at: true,
     approved_by: true,
@@ -227,6 +232,7 @@ const methods = {
                     description: req.body.description,
                     price: Number(req.body.price),
                     status: Number(req.body.status),
+                    is_notice: Number(req.body.is_notice),
                     reject_comment: req.body.reject_comment,
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by,
@@ -264,6 +270,7 @@ const methods = {
                     description: req.body.description != null ? req.body.description : undefined,
                     price:req.body.price != null ? Number(req.body.price) : undefined,
                     status:req.body.status != null ? Number(req.body.status) : undefined,
+                    is_notice:req.body.is_notice != null ? Number(req.body.is_notice) : undefined,
                     reject_comment:req.body.reject_comment != null ? req.body.reject_comment : undefined,
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by != null ? req.body.approved_by : undefined,

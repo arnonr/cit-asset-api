@@ -17,6 +17,8 @@ model asset {
     input_year           Int?           @db.Year
     inspection_date      DateTime?      @db.Date
     approved_date        DateTime?      @db.Date
+    asset_detail         String?        @db.Text
+    install_location     String?        @db.VarChar(200)
     vendor               String?        @db.VarChar(200)
     asset_type_id        Int
     brand                String?        @db.VarChar(200)
@@ -30,12 +32,19 @@ model asset {
     department_id        Int?
     drawer_name          String?        @db.VarChar(200)
     holder_name          String?        @db.VarChar(200)
+
     warranty_type_1      String?        @db.VarChar(200)
     warranty_day_1       Int?
     expiry_date_1        DateTime?      @db.Date
+
     warranty_type_2      String?        @db.VarChar(200)
     warranty_day_2       Int?
     expiry_date_2        DateTime?      @db.Date
+
+    warranty_type_3      String?        @db.VarChar(200)
+    warranty_day_3       Int?
+    expiry_date_3        DateTime?      @db.Date
+
     cover_photo          String?        @db.VarChar(200)
     asset_status         Int?           @db.TinyInt
     cancel_type          Int?           @db.TinyInt
@@ -64,6 +73,7 @@ model asset_location_history {
     asset_id    Int
     location    String?     @db.VarChar(200)
     status      Int         @db.TinyInt @default(0)
+    is_notice   Int?        @db.TinyInt @default(0)
     approved_at DateTime?
     approved_by String?     @db.VarChar(32)
     is_active   Int?         @default(1)
@@ -137,6 +147,7 @@ model holder_history {
     asset_id    Int
     holder_name String?     @db.VarChar(200)
     status      Int         @db.TinyInt @default(0)
+    is_notice   Int?        @db.TinyInt @default(0)
     approved_at DateTime?
     approved_by String?     @db.VarChar(32)
     is_active   Int?        @default(1)
@@ -154,6 +165,7 @@ model repair_history {
     repair_date DateTime?   @db.Date
     description String?     @db.Text
     price       Decimal?    @db.Decimal(10,2)
+    is_notice   Int?        @db.TinyInt @default(0)
     status      Int         @db.TinyInt @default(0)
     reject_comment String?  @db.VarChar(200)
     approved_at DateTime?

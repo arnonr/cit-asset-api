@@ -86,6 +86,18 @@ const filterData = (req) => {
         };
     }
 
+    if (req.query.asset_detail) {
+        $where["asset_detail"] = {
+        contains: req.query.asset_detail,
+        };
+    }
+
+    if (req.query.install_location) {
+        $where["install_location"] = {
+        contains: req.query.install_location,
+        };
+    }
+
     if (req.query.vendor) {
         $where["vendor"] = {
         contains: req.query.vendor,
@@ -184,6 +196,17 @@ const filterData = (req) => {
         $where["warranty_day_2"] = parseInt(req.query.warranty_day_2);
     }
 
+    if (req.query.warranty_type_3) {
+        $where["warranty_type_3"] = {
+        contains: req.query.warranty_type_3,
+        //   mode: "insensitive",
+        };
+    }
+
+    if (req.query.warranty_day_3) {
+        $where["warranty_day_3"] = parseInt(req.query.warranty_day_3);
+    }
+
     if (req.query.cover_photo) {
         $where["cover_photo"] = {
         contains: req.query.cover_photo,
@@ -250,6 +273,12 @@ const filterData = (req) => {
             },
             {
                 expiry_date_2: {
+                    lte: date,
+                    gte: new Date()
+                },
+            },
+            {
+                expiry_date_3: {
                     lte: date,
                     gte: new Date()
                 },
@@ -339,6 +368,8 @@ const selectField = {
     input_year: true,
     inspection_date: true,
     approved_date: true,
+    asset_detail: true,
+    install_location: true,
     vendor: true,
     asset_type_id: true,
     brand: true,
@@ -356,6 +387,8 @@ const selectField = {
     warranty_day_1: true,
     warranty_type_2: true,
     warranty_day_2: true,
+    warranty_type_3: true,
+    warranty_day_3: true,
     cover_photo: true,
     asset_status: true,
     cancel_type: true,
@@ -366,6 +399,7 @@ const selectField = {
     comment: true,
     expiry_date_1: true,
     expiry_date_2: true,
+    expiry_date_3: true,
     created_by: true,
     created_at: true,
     updated_by: true,
@@ -456,6 +490,7 @@ const autoCreateHolderHistory = async (asset_id, holder_name, username) => {
                 asset_id: asset_id,
                 holder_name: holder_name,
                 status: 1,
+                is_notice: 0,
                 approved_at: new Date(),
                 approved_by: username,
                 is_active: 1,
@@ -483,6 +518,7 @@ const autoCreateLocationHistory = async (asset_id, location, username) => {
                 asset_id: asset_id,
                 location: location,
                 status: 1,
+                is_notice: 0,
                 approved_at: new Date(),
                 approved_by: username,
                 is_active: 1,
@@ -559,18 +595,24 @@ const methods = {
 
             let expiry_date_1 = null;
             let expiry_date_2 = null;
+            let expiry_date_3 = null;
 
             if(req.body.approved_date != null && req.body.warranty_day_1 != null){
                 let expire_date1 = new Date(req.body.approved_date);
                 expire_date1.setDate(expire_date1.getDate() +  Number(req.body.warranty_day_1));
                 expiry_date_1 = expire_date1;
-
             }
 
             if(req.body.approved_date != null && req.body.warranty_day_2 != null){
                 let expire_date2 = new Date(req.body.approved_date);
                 expire_date2.setDate(expire_date2.getDate() + Number(req.body.warranty_day_2));
                 expiry_date_2 = expire_date2;
+            }
+
+            if(req.body.approved_date != null && req.body.warranty_day_3 != null){
+                let expire_date3 = new Date(req.body.approved_date);
+                expire_date3.setDate(expire_date3.getDate() + Number(req.body.warranty_day_3));
+                expiry_date_3 = expire_date3;
             }
 
             const item = await prisma[$table].create({
@@ -581,6 +623,8 @@ const methods = {
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
                     vendor: req.body.vendor,
+                    asset_detail: req.body.asset_detail,
+                    install_location: req.body.install_location,
                     asset_type_id: Number(req.body.asset_type_id),
                     brand: req.body.brand,
                     model: req.body.model,
@@ -597,6 +641,8 @@ const methods = {
                     warranty_day_1: Number(req.body.warranty_day_1),
                     warranty_type_2: req.body.warranty_type_2,
                     warranty_day_2: Number(req.body.warranty_day_2),
+                    warranty_type_3: req.body.warranty_type_3,
+                    warranty_day_3: Number(req.body.warranty_day_3),
                     cover_photo: pathFile,
                     asset_status: Number(req.body.asset_status),
                     cancel_type: Number(req.body.cancel_type),
@@ -612,6 +658,7 @@ const methods = {
 
                     expiry_date_1 : expiry_date_1 != null ? expiry_date_1 : undefined,
                     expiry_date_2 : expiry_date_2 != null ? expiry_date_2 : undefined,
+                    expiry_date_3 : expiry_date_3 != null ? expiry_date_3 : undefined,
                 },
             });
 
@@ -656,6 +703,7 @@ const methods = {
 
             let expiry_date_1 = null;
             let expiry_date_2 = null;
+            let expiry_date_3 = null;
 
             if(req.body.approved_date != null && req.body.warranty_day_1 != null){
                 let expire_date1 = new Date(req.body.approved_date);
@@ -669,6 +717,12 @@ const methods = {
                 expiry_date_2 = expire_date2;
             }
 
+            if(req.body.approved_date != null && req.body.warranty_day_3 != null){
+                let expire_date3 = new Date(req.body.approved_date);
+                expire_date3.setDate(expire_date3.getDate() + Number(req.body.warranty_day_3));
+                expiry_date_3 = expire_date3;
+            }
+
             const item = await prisma[$table].update({
                 where: {
                     id: Number(req.params.id),
@@ -680,6 +734,8 @@ const methods = {
                     input_year: req.body.input_year != null ? Number(req.body.input_year) : undefined,
                     inspection_date: req.body.inspection_date != null ? new Date(req.body.inspection_date) : undefined,
                     approved_date: req.body.approved_date != null ? new Date(req.body.approved_date) : undefined,
+                    asset_detail: req.body.asset_detail != null ? req.body.asset_detail : undefined,
+                    install_location: req.body.install_location != null ? req.body.install_location : undefined,
                     vendor: req.body.vendor != null ? req.body.vendor : undefined,
                     asset_type_id: req.body.asset_type_id != null ? Number(req.body.asset_type_id) : undefined,
                     brand: req.body.brand != null ? req.body.brand : undefined,
@@ -695,8 +751,13 @@ const methods = {
                     holder_name: req.body.holder_name != null ? req.body.holder_name : undefined,
                     warranty_type_1: req.body.warranty_type_1 != null ? req.body.warranty_type_1 : undefined,
                     warranty_day_1: req.body.warranty_day_1 != null ? Number(req.body.warranty_day_1) : undefined,
+
                     warranty_type_2: req.body.warranty_type_2 != null ? req.body.warranty_type_2 : undefined,
                     warranty_day_2: req.body.warranty_day_2 != null ? Number(req.body.warranty_day_2) : undefined,
+
+                    warranty_type_3: req.body.warranty_type_3 != null ? req.body.warranty_type_3 : undefined,
+                    warranty_day_3: req.body.warranty_day_3 != null ? Number(req.body.warranty_day_3) : undefined,
+
                     asset_status: req.body.asset_status != null ? Number(req.body.asset_status) : undefined,
                     cancel_type: req.body.cancel_type != null ? Number(req.body.cancel_type) : undefined,
                     cancel_date: req.body.cancel_date != null ? new Date(req.body.cancel_date) : undefined,
@@ -710,6 +771,7 @@ const methods = {
                     cover_photo: pathFile != null ? pathFile : undefined,
                     expiry_date_1 : expiry_date_1 != null ? expiry_date_1 : undefined,
                     expiry_date_2 : expiry_date_2 != null ? expiry_date_2 : undefined,
+                    expiry_date_3 : expiry_date_3 != null ? expiry_date_3 : undefined,
                     updated_by: authUsername,
                     updated_at: new Date(),
                 },
@@ -780,6 +842,10 @@ const methods = {
 
                 let vendor = req.body[key]['vendor'] != null ? req.body[key]['vendor'] : undefined;
 
+                let asset_detail = req.body[key]['asset_detail'] != null ? req.body[key]['asset_detail'] : undefined;
+
+                let install_location = req.body[key]['install_location'] != null ? req.body[key]['install_location'] : undefined;
+
                 let asset_type_id = req.body[key]['asset_type_id'] != null ? Number(req.body[key]['asset_type_id']) : undefined;
 
                 let brand = req.body[key]['brand'] != null ? req.body[key]['brand'] : undefined;
@@ -810,6 +876,10 @@ const methods = {
                 let warranty_type_2 = req.body[key]['warranty_type_2'] != null ? req.body[key]['warranty_type_2'] : undefined;
 
                 let warranty_day_2 = req.body[key]['warranty_day_2'] != null ? Number(req.body[key]['warranty_day_2']) : undefined;
+
+                let warranty_type_3 = req.body[key]['warranty_type_3'] != null ? req.body[key]['warranty_type_3'] : undefined;
+
+                let warranty_day_3 = req.body[key]['warranty_day_3'] != null ? Number(req.body[key]['warranty_day_3']) : undefined;
 
                 let asset_status = req.body[key]['asset_status'] != null ? Number(req.body[key]['asset_status']) : undefined;
 
@@ -901,6 +971,8 @@ const methods = {
                                     input_year: input_year,
                                     inspection_date: inspection_date,
                                     approved_date: approved_date,
+                                    asset_detail: asset_detail,
+                                    install_location: install_location,
                                     vendor: vendor,
                                     asset_type_id: asset_type_id,
                                     brand: brand,
@@ -918,6 +990,8 @@ const methods = {
                                     warranty_day_1: warranty_day_1,
                                     warranty_type_2: warranty_type_2,
                                     warranty_day_2: warranty_day_2,
+                                    warranty_type_3: warranty_type_3,
+                                    warranty_day_3: warranty_day_3,
                                     asset_status: asset_status,
                                     cancel_type: cancel_type,
                                     cancel_date: cancel_date,
@@ -961,6 +1035,8 @@ const methods = {
                                     input_year: input_year,
                                     inspection_date: inspection_date,
                                     approved_date: approved_date,
+                                    asset_detail: asset_detail,
+                                    install_location: install_location,
                                     vendor: vendor,
                                     asset_type_id: asset_type_id,
                                     brand: brand,
@@ -978,6 +1054,8 @@ const methods = {
                                     warranty_day_1: warranty_day_1,
                                     warranty_type_2: warranty_type_2,
                                     warranty_day_2: warranty_day_2,
+                                    warranty_type_3: warranty_type_3,
+                                    warranty_day_3: warranty_day_3,
                                     asset_status: asset_status,
                                     cancel_type: cancel_type,
                                     cancel_date: cancel_date,

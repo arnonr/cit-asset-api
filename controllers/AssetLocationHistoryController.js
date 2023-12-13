@@ -28,6 +28,10 @@ const filterData = (req) => {
         $where["status"] = parseInt(req.query.status);
     }
 
+    if (req.query.is_notice) {
+        $where["is_notice"] = parseInt(req.query.is_notice);
+    }
+
     if (req.query.approved_at) {
         $where["approved_at"] = {
         contains: req.query.approved_at,
@@ -132,6 +136,7 @@ const selectField = {
     asset_id: true,
     location: true,
     status: true,
+    is_notice: true,
     approved_at: true,
     approved_by: true,
     is_active: true,
@@ -204,6 +209,7 @@ const methods = {
                     asset_id: req.body.asset_id,
                     location: req.body.location,
                     status: Number(req.body.status),
+                    is_notice: Number(req.body.is_notice),
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by,
                     is_active: Number(req.body.is_active),
@@ -238,6 +244,7 @@ const methods = {
                     asset_id: req.body.asset_id != null ? req.body.asset_id : undefined,
                     location: req.body.location != null ? req.body.location : undefined,
                     status:req.body.status != null ? Number(req.body.status) : undefined,
+                    is_notice:req.body.is_notice != null ? Number(req.body.is_notice) : undefined,
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
                     approved_by: req.body.approved_by != null ? req.body.approved_by : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
