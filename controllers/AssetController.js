@@ -849,6 +849,8 @@ const methods = {
 
                 let asset_type_id = req.body.data[key]['asset_type_id'] != null ? Number(req.body.data[key]['asset_type_id']) : undefined;
 
+                let asset_type_code = req.body.data[key]['asset_type_code'] != null ? Number(req.body.data[key]['asset_type_code']) : undefined;
+
                 let brand = req.body.data[key]['brand'] != null ? req.body.data[key]['brand'] : undefined;
 
                 let model = req.body.data[key]['model'] != null ? req.body.data[key]['model'] : undefined;
@@ -859,6 +861,8 @@ const methods = {
 
                 let budget_type_id = req.body.data[key]['budget_type_id'] != null ? Number(req.body.data[key]['budget_type_id']) : undefined;
 
+                let budget_type_code = req.body.data[key]['budget_type_code'] != null ? Number(req.body.data[key]['budget_type_code']) : undefined;
+
                 let is_transfer = req.body.data[key]['is_transfer'] != null ? Number(req.body.data[key]['is_transfer']) : undefined;
 
                 let transfer_from = req.body.data[key]['motransfer_fromdel'] != null ? req.body.data[key]['transfer_from'] : undefined;
@@ -866,6 +870,8 @@ const methods = {
                 let location = req.body.data[key]['location'] != null ? req.body.data[key]['location'] : undefined;
 
                 let department_id = req.body.data[key]['department_id'] != null ? Number(req.body.data[key]['department_id']) : undefined;
+
+                let department_code = req.body.data[key]['department_code'] != null ? Number(req.body.data[key]['department_code']) : undefined;
 
                 let drawer_name = req.body.data[key]['drawer_name'] != null ? req.body.data[key]['drawer_name'] : undefined;
 
@@ -900,9 +906,9 @@ const methods = {
                 let is_active = 1;
 
                 asset_status = 1;
-                budget_type_id = 1;
-                department_id = 1;
-                asset_type_id = 1;
+                budget_type_id = 1; /* budget_type_code */
+                department_id = 1; /* department_code */
+                asset_type_id = 1; /* asset_type_code */
                 // price = price.replace(/,/g,'');
 
                 let import_type = null;
@@ -929,19 +935,19 @@ const methods = {
                         error_message.push('input_year is undefined');
                     }
 
-                    if(asset_type_id == undefined){
+                    if(asset_type_code == undefined){
                         input_error = true;
-                        error_message.push('asset_type_id is undefined');
+                        error_message.push('asset_type_code is undefined');
                     }
 
-                    if(budget_type_id == undefined){
+                    if(budget_type_code == undefined){
                         input_error = true;
-                        error_message.push('budget_type_id is undefined');
+                        error_message.push('budget_type_code is undefined');
                     }
 
-                    if(department_id == undefined){
+                    if(department_code == undefined){
                         input_error = true;
-                        error_message.push('department_id is undefined');
+                        error_message.push('department_code is undefined');
                     }
 
                     if(asset_status == undefined){
