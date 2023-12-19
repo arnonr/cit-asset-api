@@ -33,6 +33,12 @@ const filterData = (req) => {
         };
     }
 
+    if (req.query.category) {
+        $where["category"] = {
+            contains: req.query.category,
+        };
+    }
+
     if (req.query.is_active) {
         $where["is_active"] = parseInt(req.query.is_active);
     }
@@ -79,7 +85,8 @@ const selectField = {
     code: true,
     name: true,
     name_abbr: true,
-    is_active: true
+    is_active: true,
+    category: true
 };
 
 const methods = {
@@ -138,6 +145,7 @@ const methods = {
                     code: req.body.code,
                     name: req.body.name,
                     name_abbr: req.body.name_abbr,
+                    category: req.body.category,
                     is_active: Number(req.body.is_active),
                     created_by: authUsername,
                     updated_by: authUsername,
@@ -170,6 +178,7 @@ const methods = {
                     code: req.body.code != null ? req.body.code : undefined,
                     name: req.body.name != null ? req.body.name : undefined,
                     name_abbr: req.body.name_abbr != null ? req.body.name_abbr : undefined,
+                    category: req.body.category != null ? req.body.category : undefined,
                     is_active:req.body.is_active != null ? Number(req.body.is_active) : undefined,
                     updated_by: authUsername,
                 },
