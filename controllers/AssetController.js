@@ -824,76 +824,78 @@ const methods = {
             authUsername = decoded.username;
         }
 
-        try {
+        let is_import = Number(req.body.is_import); /* 1=import,   2=ตัดโอน*/
 
+        try {
             let import_result = [];
 
-            for(var key in req.body) {
+            for(var key in req.body.data) {
 
-                let asset_code = req.body[key]['asset_code'];
+                let asset_code = req.body.data[key]['asset_code'];
 
-                let asset_name = req.body[key]['asset_name'] != null ? req.body[key]['asset_name'] : undefined;
+                let asset_name = req.body.data[key]['asset_name'] != null ? req.body.data[key]['asset_name'] : undefined;
 
-                let input_year = req.body[key]['input_year'] != null ? Number(req.body[key]['input_year']) : undefined;
+                let input_year = req.body.data[key]['input_year'] != null ? Number(req.body.data[key]['input_year']) : undefined;
 
-                let inspection_date = req.body[key]['inspection_date'] != null ? new Date(req.body[key]['inspection_date']) : undefined;
+                let inspection_date = req.body.data[key]['inspection_date'] != null ? new Date(req.body.data[key]['inspection_date']) : undefined;
 
-                let approved_date = req.body[key]['approved_date'] != null ? new Date(req.body[key]['approved_date']) : undefined;
+                let approved_date = req.body.data[key]['approved_date'] != null ? new Date(req.body.data[key]['approved_date']) : undefined;
 
-                let vendor = req.body[key]['vendor'] != null ? req.body[key]['vendor'] : undefined;
+                let vendor = req.body.data[key]['vendor'] != null ? req.body.data[key]['vendor'] : undefined;
 
-                let asset_detail = req.body[key]['asset_detail'] != null ? req.body[key]['asset_detail'] : undefined;
+                let asset_detail = req.body.data[key]['asset_detail'] != null ? req.body.data[key]['asset_detail'] : undefined;
 
-                let install_location = req.body[key]['install_location'] != null ? req.body[key]['install_location'] : undefined;
+                let install_location = req.body.data[key]['install_location'] != null ? req.body.data[key]['install_location'] : undefined;
 
-                let asset_type_id = req.body[key]['asset_type_id'] != null ? Number(req.body[key]['asset_type_id']) : undefined;
+                let asset_type_id = req.body.data[key]['asset_type_id'] != null ? Number(req.body.data[key]['asset_type_id']) : undefined;
 
-                let brand = req.body[key]['brand'] != null ? req.body[key]['brand'] : undefined;
+                let brand = req.body.data[key]['brand'] != null ? req.body.data[key]['brand'] : undefined;
 
-                let model = req.body[key]['model'] != null ? req.body[key]['model'] : undefined;
+                let model = req.body.data[key]['model'] != null ? req.body.data[key]['model'] : undefined;
 
-                let serial_number = req.body[key]['serial_number'] != null ? req.body[key]['serial_number'] : undefined;
+                let serial_number = req.body.data[key]['serial_number'] != null ? req.body.data[key]['serial_number'] : undefined;
 
-                let price = req.body[key]['price'] != null ? Number(req.body[key]['price'].replace(/,/g,'')) : undefined;
+                let price = req.body.data[key]['price'] != null ? Number(req.body.data[key]['price'].replace(/,/g,'')) : undefined;
 
-                let budget_type_id = req.body[key]['budget_type_id'] != null ? Number(req.body[key]['budget_type_id']) : undefined;
+                let budget_type_id = req.body.data[key]['budget_type_id'] != null ? Number(req.body.data[key]['budget_type_id']) : undefined;
 
-                let is_transfer = req.body[key]['is_transfer'] != null ? Number(req.body[key]['is_transfer']) : undefined;
-                let transfer_from = req.body[key]['motransfer_fromdel'] != null ? req.body[key]['transfer_from'] : undefined;
+                let is_transfer = req.body.data[key]['is_transfer'] != null ? Number(req.body.data[key]['is_transfer']) : undefined;
 
-                let location = req.body[key]['location'] != null ? req.body[key]['location'] : undefined;
+                let transfer_from = req.body.data[key]['motransfer_fromdel'] != null ? req.body.data[key]['transfer_from'] : undefined;
 
-                let department_id = req.body[key]['department_id'] != null ? Number(req.body[key]['department_id']) : undefined;
+                let location = req.body.data[key]['location'] != null ? req.body.data[key]['location'] : undefined;
 
-                let drawer_name = req.body[key]['drawer_name'] != null ? req.body[key]['drawer_name'] : undefined;
+                let department_id = req.body.data[key]['department_id'] != null ? Number(req.body.data[key]['department_id']) : undefined;
 
-                let holder_name = req.body[key]['holder_name'] != null ? req.body[key]['holder_name'] : undefined;
+                let drawer_name = req.body.data[key]['drawer_name'] != null ? req.body.data[key]['drawer_name'] : undefined;
 
-                let warranty_type_1 = req.body[key]['warranty_type_1'] != null ? req.body[key]['warranty_type_1'] : undefined;
+                let holder_name = req.body.data[key]['holder_name'] != null ? req.body.data[key]['holder_name'] : undefined;
 
-                let warranty_day_1 = req.body[key]['warranty_day_1'] != null ? Number(req.body[key]['warranty_day_1']) : undefined;
+                let warranty_type_1 = req.body.data[key]['warranty_type_1'] != null ? req.body.data[key]['warranty_type_1'] : undefined;
 
-                let warranty_type_2 = req.body[key]['warranty_type_2'] != null ? req.body[key]['warranty_type_2'] : undefined;
+                let warranty_day_1 = req.body.data[key]['warranty_day_1'] != null ? Number(req.body.data[key]['warranty_day_1']) : undefined;
 
-                let warranty_day_2 = req.body[key]['warranty_day_2'] != null ? Number(req.body[key]['warranty_day_2']) : undefined;
+                let warranty_type_2 = req.body.data[key]['warranty_type_2'] != null ? req.body.data[key]['warranty_type_2'] : undefined;
 
-                let warranty_type_3 = req.body[key]['warranty_type_3'] != null ? req.body[key]['warranty_type_3'] : undefined;
+                let warranty_day_2 = req.body.data[key]['warranty_day_2'] != null ? Number(req.body.data[key]['warranty_day_2']) : undefined;
 
-                let warranty_day_3 = req.body[key]['warranty_day_3'] != null ? Number(req.body[key]['warranty_day_3']) : undefined;
+                let warranty_type_3 = req.body.data[key]['warranty_type_3'] != null ? req.body.data[key]['warranty_type_3'] : undefined;
 
-                let asset_status = req.body[key]['asset_status'] != null ? Number(req.body[key]['asset_status']) : undefined;
+                let warranty_day_3 = req.body.data[key]['warranty_day_3'] != null ? Number(req.body.data[key]['warranty_day_3']) : undefined;
 
-                let cancel_type = req.body[key]['cancel_type'] != null ? Number(req.body[key]['cancel_type']) : undefined;
+                let asset_status = req.body.data[key]['asset_status'] != null ? Number(req.body.data[key]['asset_status']) : undefined;
 
-                let cancel_date = req.body[key]['cancel_date'] != null ? new Date(req.body[key]['cancel_date']) : undefined;
+                let cancel_type = req.body.data[key]['cancel_type'] != null ? Number(req.body.data[key]['cancel_type']) : undefined;
 
-                let cancel_comment = req.body[key]['cancel_comment'] != null ? req.body[key]['departmecancel_commentnt_id'] : undefined;
+                let cancel_date = req.body.data[key]['cancel_date'] != null ? new Date(req.body.data[key]['cancel_date']) : undefined;
 
-                let transfer_to = req.body[key]['transfer_to'] != null ? req.body[key]['transfer_to'] : undefined;
+                let cancel_comment = req.body.data[key]['cancel_comment'] != null ? req.body.data[key]['departmecancel_commentnt_id'] : undefined;
 
-                let transfer_to_department = req.body[key]['transfer_to_department'] != null ? req.body[key]['transfer_to_department'] : undefined;
+                let transfer_to = req.body.data[key]['transfer_to'] != null ? req.body.data[key]['transfer_to'] : undefined;
 
-                let comment = req.body[key]['comment'] != null ? req.body[key]['comment'] : undefined;
+                let transfer_to_department = req.body.data[key]['transfer_to_department'] != null ? req.body.data[key]['transfer_to_department'] : undefined;
+
+                let comment = req.body.data[key]['comment'] != null ? req.body.data[key]['comment'] : undefined;
 
                 let is_active = 1;
 
@@ -915,42 +917,98 @@ const methods = {
                     error_message.push('asset_code is undefined');
                 }
 
-                if(asset_name == undefined){
-                    input_error = true;
-                    error_message.push('asset_name is undefined');
+                if(is_import != 2){ /* 1 = Import */
+
+                    if(asset_name == undefined){
+                        input_error = true;
+                        error_message.push('asset_name is undefined');
+                    }
+
+                    if(input_year == undefined){
+                        input_error = true;
+                        error_message.push('input_year is undefined');
+                    }
+
+                    if(asset_type_id == undefined){
+                        input_error = true;
+                        error_message.push('asset_type_id is undefined');
+                    }
+
+                    if(budget_type_id == undefined){
+                        input_error = true;
+                        error_message.push('budget_type_id is undefined');
+                    }
+
+                    if(department_id == undefined){
+                        input_error = true;
+                        error_message.push('department_id is undefined');
+                    }
+
+                    if(asset_status == undefined){
+                        input_error = true;
+                        error_message.push('asset_status is undefined');
+                    }
+
+                    if(is_active == undefined){
+                        input_error = true;
+                        error_message.push('is_active is undefined');
+                    }
                 }
 
-                if(input_year == undefined){
-                    input_error = true;
-                    error_message.push('input_year is undefined');
+                let importField = {};
+                if(is_import == 2){ /* 2=ตัดโอน */
+                    importField = {
+                        is_transfer: is_transfer,
+                        transfer_from: transfer_from,
+                        asset_status: asset_status,
+                        cancel_type: cancel_type,
+                        cancel_date: cancel_date,
+                        cancel_comment: cancel_comment,
+                        transfer_to: transfer_to,
+                        transfer_to_department: transfer_to_department,
+                    };
+                }else{ /* 1 = import */
+                    importField = {
+                        asset_code: asset_code,
+                        asset_name: asset_name,
+                        input_year: input_year,
+                        inspection_date: inspection_date,
+                        approved_date: approved_date,
+                        asset_detail: asset_detail,
+                        install_location: install_location,
+                        vendor: vendor,
+                        asset_type_id: asset_type_id,
+                        brand: brand,
+                        model: model,
+                        serial_number: serial_number,
+                        price: price,
+                        budget_type_id: budget_type_id,
+                        is_transfer: is_transfer,
+                        transfer_from: transfer_from,
+                        location: location,
+                        department_id: department_id,
+                        drawer_name: drawer_name,
+                        holder_name: holder_name,
+                        warranty_type_1: warranty_type_1,
+                        warranty_day_1: warranty_day_1,
+                        warranty_type_2: warranty_type_2,
+                        warranty_day_2: warranty_day_2,
+                        warranty_type_3: warranty_type_3,
+                        warranty_day_3: warranty_day_3,
+                        asset_status: asset_status,
+                        cancel_type: cancel_type,
+                        cancel_date: cancel_date,
+                        cancel_comment: cancel_comment,
+                        transfer_to: transfer_to,
+                        transfer_to_department: transfer_to_department,
+                        comment: comment,
+                        is_active: is_active,
+                        created_by: authUsername,
+                        updated_by: authUsername,
+                    };
                 }
 
-                if(asset_type_id == undefined){
-                    input_error = true;
-                    error_message.push('asset_type_id is undefined');
-                }
-
-                if(budget_type_id == undefined){
-                    input_error = true;
-                    error_message.push('budget_type_id is undefined');
-                }
-
-                if(department_id == undefined){
-                    input_error = true;
-                    error_message.push('department_id is undefined');
-                }
-
-                if(asset_status == undefined){
-                    input_error = true;
-                    error_message.push('asset_status is undefined');
-                }
-
-                if(is_active == undefined){
-                    input_error = true;
-                    error_message.push('is_active is undefined');
-                }
-
-                // console.log(asset_name);
+                // console.log(importField);
 
                 const assetCheck = await prisma[$table].findUnique({
                     select: {id: true},
@@ -965,44 +1023,7 @@ const methods = {
 
                         try {
                             const item = await prisma[$table].create({
-                                data: {
-                                    asset_code: asset_code,
-                                    asset_name: asset_name,
-                                    input_year: input_year,
-                                    inspection_date: inspection_date,
-                                    approved_date: approved_date,
-                                    asset_detail: asset_detail,
-                                    install_location: install_location,
-                                    vendor: vendor,
-                                    asset_type_id: asset_type_id,
-                                    brand: brand,
-                                    model: model,
-                                    serial_number: serial_number,
-                                    price: price,
-                                    budget_type_id: budget_type_id,
-                                    is_transfer: is_transfer,
-                                    transfer_from: transfer_from,
-                                    location: location,
-                                    department_id: department_id,
-                                    drawer_name: drawer_name,
-                                    holder_name: holder_name,
-                                    warranty_type_1: warranty_type_1,
-                                    warranty_day_1: warranty_day_1,
-                                    warranty_type_2: warranty_type_2,
-                                    warranty_day_2: warranty_day_2,
-                                    warranty_type_3: warranty_type_3,
-                                    warranty_day_3: warranty_day_3,
-                                    asset_status: asset_status,
-                                    cancel_type: cancel_type,
-                                    cancel_date: cancel_date,
-                                    cancel_comment: cancel_comment,
-                                    transfer_to: transfer_to,
-                                    transfer_to_department: transfer_to_department,
-                                    comment: comment,
-                                    is_active: is_active,
-                                    created_by: "arnonr",
-                                    updated_by: "arnonr",
-                                },
+                                data: importField,
                             });
 
                             await autoCreateLocationHistory(item.id, location, authUsername);
@@ -1029,50 +1050,13 @@ const methods = {
                                     id: id,
                                 },
 
-                                data: {
-                                    asset_code: asset_code,
-                                    asset_name: asset_name,
-                                    input_year: input_year,
-                                    inspection_date: inspection_date,
-                                    approved_date: approved_date,
-                                    asset_detail: asset_detail,
-                                    install_location: install_location,
-                                    vendor: vendor,
-                                    asset_type_id: asset_type_id,
-                                    brand: brand,
-                                    model: model,
-                                    serial_number: serial_number,
-                                    price: price,
-                                    budget_type_id: budget_type_id,
-                                    is_transfer: is_transfer,
-                                    transfer_from: transfer_from,
-                                    location: location,
-                                    department_id: department_id,
-                                    drawer_name: drawer_name,
-                                    holder_name: holder_name,
-                                    warranty_type_1: warranty_type_1,
-                                    warranty_day_1: warranty_day_1,
-                                    warranty_type_2: warranty_type_2,
-                                    warranty_day_2: warranty_day_2,
-                                    warranty_type_3: warranty_type_3,
-                                    warranty_day_3: warranty_day_3,
-                                    asset_status: asset_status,
-                                    cancel_type: cancel_type,
-                                    cancel_date: cancel_date,
-                                    cancel_comment: cancel_comment,
-                                    transfer_to: transfer_to,
-                                    transfer_to_department: transfer_to_department,
-                                    comment: comment,
-                                    is_active: is_active,
-                                    created_by: "arnonr",
-                                    updated_by: "arnonr",
-                                },
+                                data: importField,
                             });
 
                             import_success = true;
 
                         } catch (e) {
-                            console.log(meta);
+                            console.log(e);
                         }
                     }
                 }
@@ -1087,7 +1071,7 @@ const methods = {
 
             // console.log(asset);
 
-            res.status(200).json({ data: import_result, msg: "success" });
+            res.status(200).json({ data: import_result, is_import: is_import, msg: "success" });
         } catch (error) {
             res.status(404).json({ msg: error.message });
         }
