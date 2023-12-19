@@ -15,10 +15,15 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '1024mb'}));
+app.use(bodyParser.urlencoded({ extended: true,limit: '1024mb' }));
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({limit: '1024mb'}));
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cors(corsOptions));
+// app.use(express.json());
 app.use(fileUpload());
 app.use("/static", express.static(__dirname + "/public"));
 
