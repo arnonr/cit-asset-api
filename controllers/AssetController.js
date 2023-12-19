@@ -1033,6 +1033,7 @@ const methods = {
 
                         } catch (e) {
                             console.log(e);
+                            error_message.push(e);
                         }
 
                     }
@@ -1057,11 +1058,13 @@ const methods = {
 
                         } catch (e) {
                             console.log(e);
+                            error_message.push(e);
                         }
                     }
                 }
 
                 import_result[key] = {
+                    row_id:(Number(key)+1),
                     asset_code:asset_code,
                     import_type:import_type,
                     import_success:import_success,
