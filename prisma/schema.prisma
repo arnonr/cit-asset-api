@@ -23,7 +23,7 @@ model asset {
     asset_type_id        Int
     brand                String?        @db.VarChar(200)
     model                String?        @db.VarChar(200)
-    serial_number        String?        @db.VarChar(100)
+    serial_number        String?        @db.VarChar(250)
     price                Decimal?       @db.Decimal(10,2)
     budget_type_id       Int
     is_transfer          Int?           @db.TinyInt
