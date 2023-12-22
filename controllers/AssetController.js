@@ -419,6 +419,7 @@ const selectField = {
             code: true,
             name: true,
             is_active: true,
+            category: true
         },
     },
     department: {
