@@ -504,6 +504,58 @@ const autoCreateHolderHistory = async (asset_id, holder_name, username) => {
 
 }
 
+const getBudgetTypeId = async (code) => {
+
+    if(code == undefined) return null;
+
+    const item = await prisma.budget_type.findFirst({
+        select: {id: true},
+        where: {
+            code: (code).toString(),
+        },
+    });
+
+    if (item) {
+        return item.id;
+    }
+    return null;
+}
+
+const getAssetTypeId = async (code) => {
+
+    if(code == undefined) return null;
+
+    const item = await prisma.asset_type.findFirst({
+        select: {id: true},
+        where: {
+            code: (code).toString(),
+        },
+    });
+
+    if (item) {
+        return item.id;
+    }
+    return null;
+}
+
+const getDepartmentId = async (code) => {
+
+    if(code == undefined) return null;
+
+    const item = await prisma.department.findFirst({
+        select: {id: true},
+        where: {
+            code: (code).toString(),
+        },
+    });
+
+    if (item) {
+        return item.id;
+    }
+    return null;
+}
+
+
 const autoCreateLocationHistory = async (asset_id, location, username) => {
 
     const countResult = await prisma.asset_location_history.count({
@@ -848,7 +900,7 @@ const methods = {
 
                 let install_location = req.body.data[key]['install_location'] != null ? req.body.data[key]['install_location'] : undefined;
 
-                let asset_type_id = req.body.data[key]['asset_type_id'] != null ? Number(req.body.data[key]['asset_type_id']) : undefined;
+                // let asset_type_id = req.body.data[key]['asset_type_id'] != null ? Number(req.body.data[key]['asset_type_id']) : undefined;
 
                 let asset_type_code = req.body.data[key]['asset_type_code'] != null ? Number(req.body.data[key]['asset_type_code']) : undefined;
 
@@ -860,9 +912,9 @@ const methods = {
 
                 let price = req.body.data[key]['price'] != null ? Number(req.body.data[key]['price'].replace(/,/g,'')) : undefined;
 
-                let budget_type_id = req.body.data[key]['budget_type_id'] != null ? Number(req.body.data[key]['budget_type_id']) : undefined;
+                // let budget_type_id = req.body.data[key]['budget_type_id'] != null ? Number(req.body.data[key]['budget_type_id']) : undefined;
 
-                let budget_type_code = req.body.data[key]['budget_type_code'] != null ? Number(req.body.data[key]['budget_type_code']) : undefined;
+                let budget_type_code = req.body.data[key]['budget_type_code'] != null ? (req.body.data[key]['budget_type_code']) : undefined;
 
                 let is_transfer = req.body.data[key]['is_transfer'] != null ? Number(req.body.data[key]['is_transfer']) : undefined;
 
@@ -870,7 +922,7 @@ const methods = {
 
                 let location = req.body.data[key]['location'] != null ? req.body.data[key]['location'] : undefined;
 
-                let department_id = req.body.data[key]['department_id'] != null ? Number(req.body.data[key]['department_id']) : undefined;
+                // let department_id = req.body.data[key]['department_id'] != null ? Number(req.body.data[key]['department_id']) : undefined;
 
                 let department_code = req.body.data[key]['department_code'] != null ? Number(req.body.data[key]['department_code']) : undefined;
 
@@ -905,12 +957,9 @@ const methods = {
                 let comment = req.body.data[key]['comment'] != null ? req.body.data[key]['comment'] : undefined;
 
                 let is_active = 1;
-
-                asset_status = 1;
-                budget_type_id = 1; /* budget_type_code */
-                department_id = 1; /* department_code */
-                asset_type_id = 1; /* asset_type_code */
-                // price = price.replace(/,/g,'');
+                let budget_type_id = null;
+                let asset_type_id = null;
+                let department_id = null;
 
                 let import_type = null;
                 let error_message = [];
@@ -939,16 +988,34 @@ const methods = {
                     if(asset_type_code == undefined){
                         input_error = true;
                         error_message.push('asset_type_code is undefined');
+                    }else{
+                        asset_type_id = await getAssetTypeId(asset_type_code);
+                        if(asset_type_id == null){
+                            input_error = true;
+                            error_message.push('asset_type_id not found');
+                        }
                     }
 
                     if(budget_type_code == undefined){
                         input_error = true;
                         error_message.push('budget_type_code is undefined');
+                    }else{
+                        budget_type_id = await getBudgetTypeId(budget_type_code);
+                        if(budget_type_id == null){
+                            input_error = true;
+                            error_message.push('budget_type_id not found');
+                        }
                     }
 
                     if(department_code == undefined){
                         input_error = true;
                         error_message.push('department_code is undefined');
+                    }else{
+                        department_id = await getDepartmentId(department_code);
+                        if(department_id == null){
+                            input_error = true;
+                            error_message.push('department_id not found');
+                        }
                     }
 
                     if(asset_status == undefined){
