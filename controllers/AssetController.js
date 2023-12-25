@@ -337,11 +337,10 @@ const countDataAndOrder = async (req, $where) => {
 
     //Count
 
-    let $count = await prisma[$table].findMany({
+    let $count = await prisma[$table].count({
         where: $where,
     });
 
-    $count = $count.length;
     let $perPage = req.query.perPage ? Number(req.query.perPage) : 10;
     let $currentPage = req.query.currentPage ? Number(req.query.currentPage) : 1;
     let $totalPage =
@@ -478,13 +477,15 @@ const selectField = {
 
 const autoCreateHolderHistory = async (asset_id, holder_name, username) => {
 
+    if(holder_name == null) return null;
+
     const countResult = await prisma.holder_history.count({
         where: {
             asset_id: asset_id,
         },
     });
 
-    if(countResult == 0 && holder_name != null) {
+    if(countResult == 0) {
 
         const item = await prisma.holder_history.create({
             data: {
@@ -558,13 +559,15 @@ const getDepartmentId = async (code) => {
 
 const autoCreateLocationHistory = async (asset_id, location, username) => {
 
+    if(location == null) return null;
+
     const countResult = await prisma.asset_location_history.count({
         where: {
             asset_id: asset_id,
         },
     });
 
-    if(countResult == 0 && location != null) {
+    if(countResult == 0) {
 
         const item = await prisma.asset_location_history.create({
             data: {
@@ -869,7 +872,6 @@ const methods = {
     },
 
     async onImportAsset(req, res) {
-        // console.log(req.body.length);
         // console.log(req.body);
         let authUsername = null;
         if(req.headers.authorization !== undefined){
