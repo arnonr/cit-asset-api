@@ -164,6 +164,16 @@ const methods = {
         authUsername = decoded.username;
     }
 
+    const count = await prisma.user.count({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if(count > 0){
+      return res.status(409).json({ msg: "Username already exists" });
+    }
+
     try {
       const item = await prisma.user.create({
         data: {
