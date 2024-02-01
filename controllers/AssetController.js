@@ -1312,10 +1312,10 @@ const methods = {
             }
           }
 
-          if (asset_status == undefined) {
-            input_error = true;
-            error_message.push("asset_status is undefined");
-          }
+          // if (asset_status == undefined) {
+          //   input_error = true;
+          //   error_message.push("asset_status is undefined");
+          // }
 
           if (is_active == undefined) {
             input_error = true;
@@ -1366,7 +1366,7 @@ const methods = {
             warranty_day_2: warranty_day_2,
             warranty_type_3: warranty_type_3,
             warranty_day_3: warranty_day_3,
-            asset_status: asset_status,
+            asset_status: 1, /* 1=ใช้งานปกติ, 2=ยกเลิก */
             cancel_type: cancel_type,
             cancel_date: cancel_date,
             cancel_comment: cancel_comment,
