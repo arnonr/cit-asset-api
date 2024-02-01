@@ -164,31 +164,63 @@ const methods = {
         authUsername = decoded.username;
     }
 
-    const count = await prisma.user.count({
+    const count_active = await prisma.user.count({
       where: {
         username: req.body.username,
+        deleted_at: null,
       },
     });
 
-    if(count > 0){
+    if(count_active > 0){
       return res.status(409).json({ msg: "Username already exists" });
     }
 
+    const count_inactive = await prisma.user.count({
+      where: {
+        username: req.body.username,
+        deleted_at: {not: null},
+      },
+    })
+
     try {
-      const item = await prisma.user.create({
-        data: {
-          username: req.body.username,
-          name: req.body.name,
-          email: req.body.email,
-          tel: req.body.tel,
-          level: Number(req.body.level),
-          department_id: Number(req.body.department_id),
-          // password: req.body.password,
-          is_active: Number(req.body.is_active),
-          created_by: authUsername,
-          updated_by: authUsername,
-        },
-      });
+
+      let item;
+
+      if(count_inactive > 0){
+
+        item = await prisma.user.update({
+          where: {
+            username: req.body.username,
+          },
+          data: {
+            name: req.body.name,
+            email: req.body.email,
+            tel: req.body.tel,
+            level: Number(req.body.level),
+            department_id: Number(req.body.department_id),
+            is_active: Number(req.body.is_active),
+            updated_by: authUsername,
+            deleted_at: null
+          },
+        });
+
+      }else{
+
+        item = await prisma.user.create({
+          data: {
+            username: req.body.username,
+            name: req.body.name,
+            email: req.body.email,
+            tel: req.body.tel,
+            level: Number(req.body.level),
+            department_id: Number(req.body.department_id),
+            // password: req.body.password,
+            is_active: Number(req.body.is_active),
+            created_by: authUsername,
+            updated_by: authUsername,
+          },
+        });
+      }
 
       res.status(201).json({ ...item, msg: "success" });
     } catch (error) {
@@ -261,6 +293,7 @@ const methods = {
                 select: { ...selectField},
                 where: {
                   username: req.body.username,
+                  deleted_at: null,
                 },
             });
 
