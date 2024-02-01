@@ -72,6 +72,7 @@ model asset_location_history {
     id          Int         @id @default(autoincrement())
     asset_id    Int
     location    String?     @db.VarChar(200)
+    previous_location String?     @db.VarChar(200)
     status      Int         @db.TinyInt @default(0)
     is_notice   Int?        @db.TinyInt @default(0)
     approved_at DateTime?
@@ -147,6 +148,7 @@ model holder_history {
     id          Int         @id @default(autoincrement())
     asset_id    Int
     holder_name String?     @db.VarChar(200)
+    previous_holder_name String? @db.VarChar(200)
     status      Int         @db.TinyInt @default(0)
     is_notice   Int?        @db.TinyInt @default(0)
     approved_at DateTime?

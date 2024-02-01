@@ -1324,13 +1324,14 @@ const methods = {
         }
 
         let importField = {};
-        if (is_import == 2) {
-          /* 2=ตัดโอน */
+        if (is_import == 2) { /* 2=ตัดโอน  */
+
           importField = {
-            is_transfer: is_transfer,
-            transfer_from: transfer_from,
-            asset_status: asset_status,
-            cancel_type: cancel_type,
+            // is_transfer: is_transfer,
+            // transfer_from: transfer_from,
+            // asset_status: asset_status, /* 1=ใช้งานปกติ, 2=ยกเลิก */
+            asset_status: 2,
+            cancel_type: cancel_type, /* 1=โอน, 2=จำหน่าย */
             cancel_date: cancel_date,
             cancel_comment: cancel_comment,
             transfer_to: transfer_to,

@@ -148,6 +148,7 @@ const selectField = {
             id: true,
             asset_code: true,
             asset_name: true,
+            holder_name: true,
         },
     },
 };
