@@ -5,6 +5,7 @@ const auth = require("../auth");
 const controllers = require("../../controllers/AssetController");
 
 router.get("/", controllers.onGetAll);
+router.get("/report", controllers.onGetReport);
 router.get("/:id", controllers.onGetById);
 router.post("/import-asset", controllers.onImportAsset);
 router.post("/", controllers.onCreate);
