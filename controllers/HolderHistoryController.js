@@ -19,8 +19,13 @@ const filterData = (req) => {
 
     if (req.query.holder_name) {
         $where["holder_name"] = {
-        contains: req.query.holder_name,
-        //   mode: "insensitive",
+            contains: req.query.holder_name,
+        };
+    }
+
+    if (req.query.previous_holder_name) {
+        $where["previous_holder_name"] = {
+            contains: req.query.previous_holder_name,
         };
     }
 
@@ -134,6 +139,7 @@ const selectField = {
     id: true,
     asset_id: true,
     holder_name: true,
+    previous_holder_name: true,
     status: true,
     is_notice: true,
     approved_at: true,
@@ -208,6 +214,7 @@ const methods = {
                 data: {
                     asset_id: req.body.asset_id,
                     holder_name: req.body.holder_name,
+                    previous_holder_name: req.body.previous_holder_name,
                     status: Number(req.body.status),
                     is_notice: Number(req.body.is_notice),
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
@@ -243,6 +250,7 @@ const methods = {
                 data: {
                     asset_id: req.body.asset_id != null ? req.body.asset_id : undefined,
                     holder_name: req.body.holder_name != null ? req.body.holder_name : undefined,
+                    previous_holder_name: req.body.previous_holder_name != null ? req.body.previous_holder_name : undefined,
                     status:req.body.status != null ? Number(req.body.status) : undefined,
                     is_notice:req.body.is_notice != null ? Number(req.body.is_notice) : undefined,
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,

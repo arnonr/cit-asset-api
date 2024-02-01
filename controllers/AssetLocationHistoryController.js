@@ -20,7 +20,12 @@ const filterData = (req) => {
     if (req.query.location) {
         $where["location"] = {
         contains: req.query.location,
-        //   mode: "insensitive",
+        };
+    }
+
+    if (req.query.previous_location) {
+        $where["previous_location"] = {
+        contains: req.query.previous_location,
         };
     }
 
@@ -134,6 +139,7 @@ const selectField = {
     id: true,
     asset_id: true,
     location: true,
+    previous_location: true,
     status: true,
     is_notice: true,
     approved_at: true,
@@ -208,6 +214,7 @@ const methods = {
                 data: {
                     asset_id: req.body.asset_id,
                     location: req.body.location,
+                    previous_location: req.body.previous_location,
                     status: Number(req.body.status),
                     is_notice: Number(req.body.is_notice),
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
@@ -243,6 +250,7 @@ const methods = {
                 data: {
                     asset_id: req.body.asset_id != null ? req.body.asset_id : undefined,
                     location: req.body.location != null ? req.body.location : undefined,
+                    previous_location: req.body.previous_location != null ? req.body.previous_location : undefined,
                     status:req.body.status != null ? Number(req.body.status) : undefined,
                     is_notice:req.body.is_notice != null ? Number(req.body.is_notice) : undefined,
                     approved_at: req.body.approved_at != null ? new Date(req.body.approved_at) : undefined,
