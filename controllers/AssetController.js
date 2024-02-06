@@ -3,6 +3,9 @@ const uploadController = require("./UploadsController");
 // const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
+const locale = require("dayjs/locale/th");
+const buddhistEra = require("dayjs/plugin/buddhistEra");
+dayjs.extend(buddhistEra);
 
 const $table = "asset";
 
