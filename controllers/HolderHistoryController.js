@@ -99,6 +99,42 @@ const filterData = (req) => {
         $where["asset"]["asset_type_id"] = parseInt(req.query.asset_type_id);
     }
 
+    if (req.query.created_at_from && req.query.created_at_to) {
+        let date_from = new Date(
+          req.query.created_at_from + "T00:00:00.000+0000"
+        ).toISOString();
+        let date_to = new Date(
+          req.query.created_at_to + "T23:59:59.000+0000"
+        ).toISOString();
+    
+        $where["AND"] = [
+          {
+            created_at: {
+              gte: date_from,
+            },
+          },
+          {
+            created_at: {
+              lte: date_to,
+            },
+          },
+        ];
+      } else if (req.query.created_at_from) {
+        let date_from = new Date(
+          req.query.created_at_from + "T00:00:00.000+0000"
+        ).toISOString();
+        $where["created_at"] = {
+          gte: date_from,
+        };
+      } else if (req.query.created_at_to) {
+        let date_to = new Date(
+          req.query.created_at_to + "T23:59:59.000+0000"
+        ).toISOString();
+        $where["created_at"] = {
+          lte: date_to,
+        };
+      }
+
     return $where;
 };
 
@@ -151,9 +187,10 @@ const selectField = {
     updated_by: true,
     asset: {
         select: {
-            id: true,
             asset_code: true,
+            asset_detail: true,
             asset_name: true,
+            asset_type_id: true,
             holder_name: true,
         },
     },
