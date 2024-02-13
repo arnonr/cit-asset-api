@@ -292,7 +292,7 @@ const methods = {
             const item = await prisma.user.findUnique({
                 select: { ...selectField},
                 where: {
-                  username: 'arnonr',
+                  username: req.body.username,
                   deleted_at: null,
                 },
             });
