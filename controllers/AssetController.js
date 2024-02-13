@@ -530,15 +530,15 @@ const selectFieldReport = {
   //     is_active: true,
   //   },
   // },
-  // budget_type: {
-  //   select: {
-  //     id: true,
-  //     code: true,
-  //     name: true,
-  //     is_active: true,
-  //     category: true,
-  //   },
-  // },
+  budget_type: {
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      is_active: true,
+      category: true,
+    },
+  },
   // department: {
   //   select: {
   //     id: true,
@@ -1537,6 +1537,10 @@ const methods = {
             : "";
 
         return {
+          id: e.id,
+          input_year: e.input_year,
+          asset_code: e.asset_code,
+          budget_type_category: e.budget_type.category,
           หมายเลขครุภัณฑ์: e.asset_code,
           ชื่อครุภัณฑ์: e.asset_name,
           ปีงบประมาณ: e.input_year,
