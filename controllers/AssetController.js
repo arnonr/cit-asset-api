@@ -1540,7 +1540,9 @@ const methods = {
           id: e.id,
           input_year: e.input_year,
           asset_code: e.asset_code,
-          budget_type_category: e.budget_type.category,
+          budget_type:{
+            category: e.budget_type.category
+          },
           หมายเลขครุภัณฑ์: e.asset_code,
           ชื่อครุภัณฑ์: e.asset_name,
           ปีงบประมาณ: e.input_year,
