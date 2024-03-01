@@ -56,7 +56,7 @@ const countDataAndOrder = async (req, $where) => {
         where: $where,
     });
 
-    let $perPage = req.query.perPage ? Number(req.query.perPage) : 10;
+    let $perPage = req.query.perPage ? Number(req.query.perPage) : 100;
     let $currentPage = req.query.currentPage ? Number(req.query.currentPage) : 1;
     let $totalPage =
         Math.ceil($count / $perPage) == 0 ? 1 : Math.ceil($count / $perPage);

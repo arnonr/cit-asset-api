@@ -90,7 +90,6 @@ const methods = {
         // data["is_publish"] = 1;
         data["created_by"] = authUsername;
         data["updated_by"] = authUsername;
-        // console.log(data)
 
         const item = await prisma[table_name + "_photo"].create({
           data: data,

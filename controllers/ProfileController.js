@@ -61,7 +61,6 @@ const filterData = (req) => {
   $where["user"] = {};
 
   if (req.query.status) {
-    console.log(req.query.status);
     $where["user"]["status"] = parseInt(req.query.status);
   }
 

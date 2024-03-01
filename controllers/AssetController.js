@@ -3,6 +3,9 @@ const uploadController = require("./UploadsController");
 // const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
+const locale = require("dayjs/locale/th");
+const buddhistEra = require("dayjs/plugin/buddhistEra");
+dayjs.extend(buddhistEra);
 
 const $table = "asset";
 
@@ -293,8 +296,6 @@ const filterData = (req) => {
     let date_to = new Date(
       req.query.created_at_to + "T23:59:59.000+0000"
     ).toISOString();
-    console.log(date_from);
-    console.log(date_to);
 
     $where["AND"] = [
       {
@@ -479,118 +480,155 @@ const selectField = {
 
 // ฟิลด์ที่ต้องการสำหรับ Report
 const selectFieldReport = {
-    id: true,
-    asset_code: true,
-    input_year: true,
-    // inspection_date: true,
-    // approved_date: true,
-    // asset_detail: true,
-    // install_location: true,
-    // vendor: true,
-    asset_type_id: true,
-    // brand: true,
-    // model: true,
-    // serial_number: true,
-    // price: true,
-    budget_type_id: true,
-    // is_transfer: true,
-    // transfer_from: true,
-    // location: true,
-    department_id: true,
-    // drawer_name: true,
-    // holder_name: true,
-    // warranty_type_1: true,
-    // warranty_day_1: true,
-    // warranty_type_2: true,
-    // warranty_day_2: true,
-    // warranty_type_3: true,
-    // warranty_day_3: true,
-    // cover_photo: true,
-    asset_status: true,
-    // cancel_type: true,
-    // cancel_date: true,
-    // cancel_comment: true,
-    // transfer_to: true,
-    // transfer_to_department: true,
-    // comment: true,
-    // expiry_date_1: true,
-    // expiry_date_2: true,
-    // expiry_date_3: true,
-    // created_by: true,
-    // created_at: true,
-    // updated_by: true,
-    // updated_at: true,
-    // is_active: true,
-    // asset_type: {
-    //   select: {
-    //     id: true,
-    //     code: true,
-    //     name: true,
-    //     is_active: true,
-    //   },
-    // },
-    // budget_type: {
-    //   select: {
-    //     id: true,
-    //     code: true,
-    //     name: true,
-    //     is_active: true,
-    //     category: true,
-    //   },
-    // },
-    // department: {
-    //   select: {
-    //     id: true,
-    //     code: true,
-    //     name: true,
-    //     is_active: true,
-    //   },
-    // },
-    // asset_photo: {
-    //   select: {
-    //     id: true,
-    //     asset_photo_file: true,
-    //     secret_key: true,
-    //     is_active: true,
-    //   },
-    // },
-    // repair_history: {
-    //   select: {
-    //     id: true,
-    //     asset_id: true,
-    //     repair_date: true,
-    //     description: true,
-    //     price: true,
-    //     status: true,
-    //     reject_comment: true,
-    //     approved_at: true,
-    //     approved_by: true,
-    //     is_active: true,
-    //   },
-    // },
-    // holder_history: {
-    //   select: {
-    //     id: true,
-    //     asset_id: true,
-    //     holder_name: true,
-    //     status: true,
-    //     approved_at: true,
-    //     approved_by: true,
-    //     is_active: true,
-    //   },
-    // },
-    // asset_location_history: {
-    //   select: {
-    //     id: true,
-    //     asset_id: true,
-    //     location: true,
-    //     status: true,
-    //     approved_at: true,
-    //     approved_by: true,
-    //     is_active: true,
-    //   },
-    // },
-  };
+  id: true,
+  asset_code: true,
+  input_year: true,
+  // inspection_date: true,
+  // approved_date: true,
+  // asset_detail: true,
+  // install_location: true,
+  // vendor: true,
+  asset_type_id: true,
+  // brand: true,
+  // model: true,
+  // serial_number: true,
+  // price: true,
+  budget_type_id: true,
+  // is_transfer: true,
+  // transfer_from: true,
+  // location: true,
+  department_id: true,
+  // drawer_name: true,
+  // holder_name: true,
+  // warranty_type_1: true,
+  // warranty_day_1: true,
+  // warranty_type_2: true,
+  // warranty_day_2: true,
+  // warranty_type_3: true,
+  // warranty_day_3: true,
+  // cover_photo: true,
+  asset_status: true,
+  // cancel_type: true,
+  // cancel_date: true,
+  // cancel_comment: true,
+  // transfer_to: true,
+  // transfer_to_department: true,
+  // comment: true,
+  // expiry_date_1: true,
+  // expiry_date_2: true,
+  // expiry_date_3: true,
+  // created_by: true,
+  // created_at: true,
+  // updated_by: true,
+  // updated_at: true,
+  // is_active: true,
+  // asset_type: {
+  //   select: {
+  //     id: true,
+  //     code: true,
+  //     name: true,
+  //     is_active: true,
+  //   },
+  // },
+  budget_type: {
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      is_active: true,
+      category: true,
+    },
+  },
+  // department: {
+  //   select: {
+  //     id: true,
+  //     code: true,
+  //     name: true,
+  //     is_active: true,
+  //   },
+  // },
+  // asset_photo: {
+  //   select: {
+  //     id: true,
+  //     asset_photo_file: true,
+  //     secret_key: true,
+  //     is_active: true,
+  //   },
+  // },
+  // repair_history: {
+  //   select: {
+  //     id: true,
+  //     asset_id: true,
+  //     repair_date: true,
+  //     description: true,
+  //     price: true,
+  //     status: true,
+  //     reject_comment: true,
+  //     approved_at: true,
+  //     approved_by: true,
+  //     is_active: true,
+  //   },
+  // },
+  // holder_history: {
+  //   select: {
+  //     id: true,
+  //     asset_id: true,
+  //     holder_name: true,
+  //     status: true,
+  //     approved_at: true,
+  //     approved_by: true,
+  //     is_active: true,
+  //   },
+  // },
+  // asset_location_history: {
+  //   select: {
+  //     id: true,
+  //     asset_id: true,
+  //     location: true,
+  //     status: true,
+  //     approved_at: true,
+  //     approved_by: true,
+  //     is_active: true,
+  //   },
+  // },
+};
+
+const selectFieldExport = {
+  id: true,
+  asset_code: true,
+  asset_name: true,
+  input_year: true,
+  asset_detail: true,
+  asset_type_id: true,
+  inspection_date: true,
+  price: true,
+  vendor: true,
+  budget_type_id: true,
+  department_id: true,
+  warranty_type_1: true,
+  warranty_day_1: true,
+  warranty_type_2: true,
+  warranty_day_2: true,
+  warranty_type_3: true,
+  warranty_day_3: true,
+  asset_type: {
+    select: {
+      name: true,
+    },
+  },
+  budget_type: {
+    select: {
+      name: true,
+      category: true,
+    },
+  },
+  department: {
+    select: {
+      code: true,
+      name: true,
+    },
+  },
+};
 
 const autoCreateHolderHistory = async (asset_id, holder_name, username) => {
   if (holder_name == null) return null;
@@ -698,7 +736,6 @@ const methods = {
     try {
       let $where = filterData(req);
       let other = await countDataAndOrder(req, $where);
-      // console.log($where);
       const item = await prisma[$table].findMany({
         select: selectField,
         where: $where,
@@ -1324,14 +1361,15 @@ const methods = {
         }
 
         let importField = {};
-        if (is_import == 2) { /* 2=ตัดโอน  */
+        if (is_import == 2) {
+          /* 2=ตัดโอน  */
 
           importField = {
             // is_transfer: is_transfer,
             // transfer_from: transfer_from,
             // asset_status: asset_status, /* 1=ใช้งานปกติ, 2=ยกเลิก */
-            asset_status: 2, /* 1=ใช้งานปกติ, 2=ยกเลิก */
-            cancel_type: cancel_type, /* 1=โอน, 2=จำหน่าย */
+            asset_status: 2 /* 1=ใช้งานปกติ, 2=ยกเลิก */,
+            cancel_type: cancel_type /* 1=โอน, 2=จำหน่าย */,
             cancel_date: cancel_date,
             cancel_comment: cancel_comment,
             transfer_to: transfer_to,
@@ -1366,7 +1404,7 @@ const methods = {
             warranty_day_2: warranty_day_2,
             warranty_type_3: warranty_type_3,
             warranty_day_3: warranty_day_3,
-            asset_status: 1, /* 1=ใช้งานปกติ, 2=ยกเลิก */
+            asset_status: 1 /* 1=ใช้งานปกติ, 2=ยกเลิก */,
             cancel_type: cancel_type,
             cancel_date: cancel_date,
             cancel_comment: cancel_comment,
@@ -1465,6 +1503,74 @@ const methods = {
 
       res.status(200).json({
         data: item,
+        totalData: other.$count,
+        totalPage: other.$totalPage,
+        currentPage: other.$currentPage,
+        msg: "success",
+      });
+    } catch (error) {
+      res.status(500).json({ msg: error.message });
+    }
+  },
+
+  async onGetExport(req, res) {
+    try {
+      let $where = filterData(req);
+      let other = await countDataAndOrder(req, $where);
+      // selectFieldExport
+      const item = await prisma[$table].findMany({
+        select: selectFieldExport,
+        where: $where,
+        orderBy: other.$orderBy,
+        skip: other.$offset,
+        take: other.$perPage,
+      });
+
+      let data = item.map((e) => {
+        let expire_date_all =
+          e.warranty_type_1 != null && e.warranty_type_1 != ""
+            ? e.warranty_type_1 + " " + e.warranty_day_1 + " วัน"
+            : "";
+        expire_date_all +=
+          e.warranty_type_2 != null && e.warranty_type_2 != ""
+            ? ", " + e.warranty_type_2 + " " + e.warranty_day_2 + " วัน"
+            : "";
+        expire_date_all +=
+          e.warranty_type_3 != null && e.warranty_type_3 != ""
+            ? ", " + e.warranty_type_3 + " " + e.warranty_day_3 + " วัน"
+            : "";
+
+        return {
+          id: e.id,
+          input_year: e.input_year,
+          asset_code: e.asset_code,
+          budget_type:{
+            category: e.budget_type.category
+          },
+          หมายเลขครุภัณฑ์: e.asset_code,
+          ชื่อครุภัณฑ์: e.asset_name,
+          ปีงบประมาณ: e.input_year,
+          รายละเอียด: e.asset_detail,
+          ประเภทครุภัณฑ์: e.asset_type.name,
+          วันที่ตรวจรับ:
+            e.inspection_date != null
+              ? dayjs(e.inspection_date).locale("th").format("DD MMM BBBB")
+              : "",
+          มูลค่าครุภัณฑ์:
+            e.price != null
+              ? Number(e.price)
+                  .toFixed(2)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              : "",
+          ผู้จัดจำหน่าย: e.vendor,
+          แหล่งเงิน: e.budget_type.name,
+          การรับประกัน: expire_date_all,
+        };
+      });
+
+      res.status(200).json({
+        data: data,
         totalData: other.$count,
         totalPage: other.$totalPage,
         currentPage: other.$currentPage,

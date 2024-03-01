@@ -322,14 +322,13 @@ const methods = {
                     };
 
                     let response = await axios(api_config);
-
-                    // console.log(response);
+                    
                     if (response.data.api_status_code == "202") {
                         login_success = true;
                     }else if(response.data.api_status == 'fail'){
                       throw new Error(response.data.api_message);
                     }else{
-                      console.log(response.data);
+
                     }
 
                 }
@@ -368,9 +367,6 @@ const methods = {
 
         try {
             let response = await axios(api_config);
-            // console.log(response.data);
-            // console.log(res);
-
             if (response.data.api_status_code == "201") {
                 res.status(200).json(response.data.userInfo);
             } else if (response.data.api_status_code == "501") {

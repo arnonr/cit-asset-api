@@ -11,7 +11,6 @@ const methods = {
       let pathFile = null;
 
       if (!req.files || Object.keys(req.files).length === 0) {
-        //  console.log("xx");
       } else {
         let uploadFile = req.files[attribute_name];
         let typeFile = uploadFile.mimetype.split("/");
@@ -46,12 +45,9 @@ const methods = {
         // .toFile(pathUpload, (err, info) => {
 
         // })
-
-        console.log(pathFile);
       }
       return pathFile;
     } catch (error) {
-      console.log(error);
       return "error";
     }
   },
