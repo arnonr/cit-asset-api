@@ -1261,7 +1261,7 @@ const methods = {
 
         let input_error = false;
 
-        if (asset_code == undefined) {
+        if (asset_code == undefined || asset_code == "") {
           input_error = true;
           error_message.push("asset_code is undefined");
         }
@@ -1269,17 +1269,17 @@ const methods = {
         if (is_import != 2) {
           /* 1 = Import */
 
-          if (asset_name == undefined) {
+          if (asset_name == undefined || asset_name == "") {
             input_error = true;
             error_message.push("asset_name is undefined");
           }
 
-          if (input_year == undefined) {
+          if (input_year == undefined || input_year == "") {
             input_error = true;
             error_message.push("input_year is undefined");
           }
 
-          if (asset_type_code == undefined) {
+          if (asset_type_code == undefined || asset_type_code == "") {
             input_error = true;
             error_message.push("asset_type_code is undefined");
           } else {
@@ -1290,7 +1290,7 @@ const methods = {
             }
           }
 
-          if (budget_type_code == undefined) {
+          if (budget_type_code == undefined || budget_type_code == "") {
             input_error = true;
             error_message.push("budget_type_code is undefined");
           } else {
@@ -1301,7 +1301,7 @@ const methods = {
             }
           }
 
-          if (department_code == undefined) {
+          if (department_code == undefined || department_code == "") {
             input_error = true;
             error_message.push("department_code is undefined");
           } else {
@@ -1317,7 +1317,7 @@ const methods = {
           //   error_message.push("asset_status is undefined");
           // }
 
-          if (is_active == undefined) {
+          if (is_active == undefined || is_active == "") {
             input_error = true;
             error_message.push("is_active is undefined");
           }
@@ -1380,53 +1380,55 @@ const methods = {
         }
 
         // console.log(importField);
+        if (input_error == false) {
 
-        const assetCheck = await prisma[$table].findUnique({
-          select: { id: true },
-          where: { asset_code: asset_code },
-        });
+          const assetCheck = await prisma[$table].findUnique({
+            select: { id: true },
+            where: { asset_code: asset_code },
+          });
 
-        if (assetCheck == null) {
-          // console.log("create");
-          import_type = "create";
+          if (assetCheck == null) {
+            // console.log("create");
+            import_type = "create";
 
-          if (input_error == false) {
-            try {
-              const item = await prisma[$table].create({
-                data: importField,
-              });
+            if (input_error == false) {
+              try {
+                const item = await prisma[$table].create({
+                  data: importField,
+                });
 
-              await autoCreateLocationHistory(item.id, location, authUsername);
-              await autoCreateHolderHistory(item.id, holder_name, authUsername);
+                await autoCreateLocationHistory(item.id, location, authUsername);
+                await autoCreateHolderHistory(item.id, holder_name, authUsername);
 
-              import_success = true;
-            } catch (e) {
-              console.log(e);
-              error_message.push(e);
+                import_success = true;
+              } catch (e) {
+                console.log(e);
+                error_message.push(e);
+              }
+            }
+          } else {
+            // console.log("update");
+            import_type = "update";
+            const id = assetCheck.id;
+            // console.log(id);
+            if (input_error == false) {
+              try {
+                const item = await prisma[$table].update({
+                  where: {
+                    id: id,
+                  },
+
+                  data: importField,
+                });
+
+                import_success = true;
+              } catch (e) {
+                console.log(e);
+                error_message.push(e);
+              }
             }
           }
-        } else {
-          // console.log("update");
-          import_type = "update";
-          const id = assetCheck.id;
-          // console.log(id);
-          if (input_error == false) {
-            try {
-              const item = await prisma[$table].update({
-                where: {
-                  id: id,
-                },
-
-                data: importField,
-              });
-
-              import_success = true;
-            } catch (e) {
-              console.log(e);
-              error_message.push(e);
-            }
-          }
-        }
+        } /* !-- findUnique */
 
         import_result[key] = {
           row_id: Number(key) + 1,
