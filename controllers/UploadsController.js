@@ -26,7 +26,7 @@ const methods = {
 
         /* Resize and save to path */
         sharp(uploadFile.data.buffer)
-        .resize(1024)
+        .resize(300)
         .toFile(pathUpload, (err, info) => {
             // console.log(info);
             if (err) return err;
