@@ -1556,8 +1556,8 @@ const methods = {
         select: selectFieldExport,
         where: $where,
         orderBy: other.$orderBy,
-        skip: other.$offset,
-        take: other.$perPage,
+        // skip: other.$offset,
+        // take: other.$perPage,
       });
 
       let data = item.map((e) => {
