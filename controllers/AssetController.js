@@ -1377,6 +1377,8 @@ const methods = {
           };
         } else {
           /* 1 = import */
+          holder_name = drawer_name; /* ให้ผู้เบิกเป็นผู้ใช้งานคนแรก */
+
           importField = {
             asset_code: asset_code,
             asset_name: asset_name,
