@@ -1,5 +1,6 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const { expressjwt: jwt } = require("express-jwt");
-
 const getTokenFromHeader = (req) => {
   if (
     req.headers.authorization &&
