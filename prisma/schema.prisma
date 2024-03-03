@@ -84,6 +84,9 @@ model asset_location_history {
     updated_by  String?     @db.VarChar(255)
     deleted_at  DateTime?
     asset       asset       @relation(fields: [asset_id], references: [id])
+    created_user       user?       @relation(name: "CreatedBy", fields: [created_by], references: [username])
+    approved_user      user?       @relation(name: "ApprovedBy", fields: [approved_by], references: [username])
+
 }
 
 model asset_photo {
@@ -160,6 +163,8 @@ model holder_history {
     updated_by  String?     @db.VarChar(255)
     deleted_at  DateTime?
     asset       asset       @relation(fields: [asset_id], references: [id])
+    created_user       user?       @relation(name: "CreatedBy", fields: [created_by], references: [username])
+    approved_user      user?       @relation(name: "ApprovedBy", fields: [approved_by], references: [username])
 }
 
 model repair_history {
@@ -180,6 +185,9 @@ model repair_history {
     updated_by  String?     @db.VarChar(255)
     deleted_at  DateTime?
     asset       asset       @relation(fields: [asset_id], references: [id])
+    created_user       user?       @relation(name: "CreatedBy", fields: [created_by], references: [username])
+    approved_user      user?       @relation(name: "ApprovedBy", fields: [approved_by], references: [username])
+
 }
 
 model user {
@@ -198,5 +206,14 @@ model user {
     updated_by    String?             @db.VarChar(255)
     deleted_at  DateTime?
     department    department?         @relation(fields: [department_id], references: [id])
+
+    created_repair_histories repair_history[] @relation(name: "CreatedBy")
+    approved_repair_histories repair_history[] @relation(name: "ApprovedBy")
+
+    asset_location_history_created_user  asset_location_history[] @relation(name: "CreatedBy")
+    asset_location_history_approved_user  asset_location_history[] @relation(name: "ApprovedBy")
+
+    holder_history_created_user  holder_history[] @relation(name: "CreatedBy")
+    holder_history_approved_user  holder_history[] @relation(name: "ApprovedBy")
 }
 
