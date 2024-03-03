@@ -119,7 +119,7 @@ const filterData = (req) => {
     let date_to = new Date(
       req.query.created_at_to + "T23:59:59.000+0000"
     ).toISOString();
-    
+
     $where["AND"] = [
       {
         created_at: {
@@ -219,6 +219,16 @@ const selectField = {
       expiry_date_1: true,
       expiry_date_2: true,
       expiry_date_3: true,
+    },
+  },
+  created_user: {
+    select: {
+      name: true,
+    },
+  },
+  approved_user: {
+    select: {
+      name: true,
     },
   },
 };

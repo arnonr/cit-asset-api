@@ -440,74 +440,74 @@ const selectField = {
       is_active: true,
     },
   },
-  repair_history: {
-    select: {
-      id: true,
-      asset_id: true,
-      repair_date: true,
-      description: true,
-      price: true,
-      status: true,
-      reject_comment: true,
-      approved_at: true,
-      approved_by: true,
-      is_active: true,
-      created_at: true,
-      created_by: true,
-      approved_user:{
-        select:{
-          name: true,
-        }
-      },
-      created_user:{
-        select:{
-          name: true,
-        }
-      }
-    },
-  },
-  holder_history: {
-    select: {
-      id: true,
-      asset_id: true,
-      holder_name: true,
-      status: true,
-      approved_at: true,
-      approved_by: true,
-      is_active: true,
-      approved_user:{
-        select:{
-          name: true,
-        }
-      },
-      created_user:{
-        select:{
-          name: true,
-        }
-      }
-    },
-  },
-  asset_location_history: {
-    select: {
-      id: true,
-      asset_id: true,
-      location: true,
-      status: true,
-      approved_at: true,
-      approved_by: true,
-      is_active: true,
-      approved_user:{
-        select:{
-          name: true,
-        }
-      },
-      created_user:{
-        select:{
-          name: true,
-        }
-      }
-    },
-  },
+//   repair_history: {
+//     select: {
+//       id: true,
+//       asset_id: true,
+//       repair_date: true,
+//       description: true,
+//       price: true,
+//       status: true,
+//       reject_comment: true,
+//       approved_at: true,
+//       approved_by: true,
+//       is_active: true,
+//       created_at: true,
+//       created_by: true,
+//       approved_user:{
+//         select:{
+//           name: true,
+//         }
+//       },
+//       created_user:{
+//         select:{
+//           name: true,
+//         }
+//       }
+//     },
+//   },
+//   holder_history: {
+//     select: {
+//       id: true,
+//       asset_id: true,
+//       holder_name: true,
+//       status: true,
+//       approved_at: true,
+//       approved_by: true,
+//       is_active: true,
+//       approved_user:{
+//         select:{
+//           name: true,
+//         }
+//       },
+//       created_user:{
+//         select:{
+//           name: true,
+//         }
+//       }
+//     },
+//   },
+//   asset_location_history: {
+//     select: {
+//       id: true,
+//       asset_id: true,
+//       location: true,
+//       status: true,
+//       approved_at: true,
+//       approved_by: true,
+//       is_active: true,
+//       approved_user:{
+//         select:{
+//           name: true,
+//         }
+//       },
+//       created_user:{
+//         select:{
+//           name: true,
+//         }
+//       }
+//     },
+//   },
 };
 
 // ฟิลด์ที่ต้องการสำหรับ Report
