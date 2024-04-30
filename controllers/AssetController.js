@@ -802,6 +802,43 @@ const methods = {
     }
   },
 
+  async onUpdateMultipleAssetCoverPhoto(req, res) {
+    try {
+      let pathFile = await uploadController.onUploadFile(
+        req,
+        "/images/asset/",
+        "cover_photo"
+      );
+
+      if (pathFile == "error") {
+        return res.status(500).send("cover_photo is null");
+      }
+
+      if(req.body.asset_id == null) {
+        return res.status(500).send("asset_id is null");
+      }
+
+      if(req.body.asset_id){
+        const asset_is_array = req.body.asset_id.split(',');
+        for (let i = 0; i < asset_is_array.length; i++) {
+          const item = await prisma[$table].update({
+            where: {
+              id: Number(asset_is_array[i]),
+            },
+            data: {
+              cover_photo: pathFile,
+            }
+          });
+        }
+      }
+
+      res.status(200).json({'asset_id': req.body.asset_id, 'cover_photo': pathFile, msg: "success" });
+    } catch (error) {
+      res.status(400).json({ msg: error.message });
+    }
+
+  },
+
   // สร้าง
   async onCreate(req, res) {
     let authUsername = null;

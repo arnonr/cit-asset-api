@@ -8,6 +8,7 @@ router.get("/", controllers.onGetAll);
 router.get("/report", controllers.onGetReport);
 router.get("/export", controllers.onGetExport);
 router.get("/:id", controllers.onGetById);
+router.post("/update-multiple-asset-cover-photo", controllers.onUpdateMultipleAssetCoverPhoto);
 router.post("/import-asset", controllers.onImportAsset);
 router.post("/", controllers.onCreate);
 
