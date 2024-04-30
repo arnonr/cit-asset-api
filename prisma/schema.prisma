@@ -187,7 +187,7 @@ model repair_history {
     created_user   user?     @relation(name: "CreatedBy", fields: [created_by], references: [username])
     approved_user  user?     @relation(name: "ApprovedBy", fields: [approved_by], references: [username])
 }
-
+//Update
 model user {
     id            Int         @id @default(autoincrement())
     username      String      @unique @db.VarChar(32)
@@ -214,3 +214,5 @@ model user {
     holder_history_created_user  holder_history[] @relation(name: "CreatedBy")
     holder_history_approved_user holder_history[] @relation(name: "ApprovedBy")
 }
+
+
