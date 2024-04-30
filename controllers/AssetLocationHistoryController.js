@@ -106,7 +106,7 @@ const filterData = (req) => {
         let date_to = new Date(
           req.query.created_at_to + "T23:59:59.000+0000"
         ).toISOString();
-    
+
         $where["AND"] = [
           {
             created_at: {
@@ -196,6 +196,11 @@ const selectField = {
             install_location: true,
         },
     },
+    approved_user: {
+        select: {
+            name: true,
+        },
+    }
 };
 
 const methods = {

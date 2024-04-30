@@ -86,7 +86,6 @@ model asset_location_history {
     asset       asset       @relation(fields: [asset_id], references: [id])
     created_user       user?       @relation(name: "CreatedBy", fields: [created_by], references: [username])
     approved_user      user?       @relation(name: "ApprovedBy", fields: [approved_by], references: [username])
-
 }
 
 model asset_photo {
