@@ -215,4 +215,6 @@ model user {
     holder_history_approved_user holder_history[] @relation(name: "ApprovedBy")
 }
 
+// Update schema.prisma
+
 
