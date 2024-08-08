@@ -199,11 +199,11 @@ const selectField = {
       name: true,
     },
   },
-//   approved_user: {
-//     select: {
-//       name: true,
-//     },
-//   },
+  approved_user: {
+    select: {
+      name: true,
+    },
+  },
 };
 
 const methods = {
