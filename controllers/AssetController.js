@@ -695,6 +695,7 @@ const getBudgetTypeId = async (code) => {
     select: { id: true },
     where: {
       code: code.toString(),
+      deleted_at: null,
     },
   });
 
@@ -711,6 +712,7 @@ const getAssetTypeId = async (code) => {
     select: { id: true },
     where: {
       code: code.toString(),
+      deleted_at: null,
     },
   });
 
@@ -727,6 +729,7 @@ const getDepartmentId = async (code) => {
     select: { id: true },
     where: {
       code: code.toString(),
+      deleted_at: null,
     },
   });
 
