@@ -260,6 +260,13 @@ const filterData = (req) => {
     };
   }
 
+  if(req.query.unit){
+    $where["unit"] = {
+      contains: req.query.unit,
+      //   mode: "insensitive",
+    };
+  }
+
   if (req.query.is_active) {
     $where["is_active"] = parseInt(req.query.is_active);
   }
@@ -399,6 +406,7 @@ const selectField = {
   transfer_to: true,
   transfer_to_department: true,
   comment: true,
+  unit: true,
   expiry_date_1: true,
   expiry_date_2: true,
   expiry_date_3: true,
@@ -634,6 +642,7 @@ const selectFieldExport = {
   asset_type_id: true,
   inspection_date: true,
   price: true,
+  unit: true,
   vendor: true,
   budget_type_id: true,
   department_id: true,
@@ -910,6 +919,7 @@ const methods = {
           model: req.body.model,
           serial_number: req.body.serial_number,
           price: Number(req.body.price),
+          unit: req.body.unit,
           budget_type_id: Number(req.body.budget_type_id),
           is_transfer: Number(req.body.is_transfer),
           transfer_from: req.body.transfer_from,
@@ -1052,6 +1062,7 @@ const methods = {
           serial_number:
             req.body.serial_number != null ? req.body.serial_number : undefined,
           price: req.body.price != null ? Number(req.body.price) : undefined,
+          unit: req.body.unit != null ? req.body.unit : undefined,
           budget_type_id:
             req.body.budget_type_id != null
               ? Number(req.body.budget_type_id)
@@ -1252,6 +1263,11 @@ const methods = {
         let price =
           req.body.data[key]["price"] != null
             ? Number(req.body.data[key]["price"].replace(/,/g, ""))
+            : undefined;
+
+        let unit =
+          req.body.data[key]["unit"] != null
+            ? req.body.data[key]["unit"]
             : undefined;
 
         // let budget_type_id = req.body.data[key]['budget_type_id'] != null ? Number(req.body.data[key]['budget_type_id']) : undefined;
@@ -1465,6 +1481,7 @@ const methods = {
             model: model,
             serial_number: serial_number,
             price: price,
+            unit: unit,
             budget_type_id: budget_type_id,
             is_transfer: is_transfer,
             transfer_from: transfer_from,

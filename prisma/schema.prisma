@@ -44,6 +44,7 @@ model asset {
     warranty_type_3 String?   @db.VarChar(200)
     warranty_day_3  Int?
     expiry_date_3   DateTime? @db.Date
+    unit            String?   @db.VarChar(200)
 
     cover_photo            String?                  @db.VarChar(200)
     asset_status           Int?                     @db.TinyInt
