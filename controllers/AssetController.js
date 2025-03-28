@@ -1305,7 +1305,7 @@ const methods = {
             : undefined;
 
         let transfer_from =
-          req.body.data[key]["motransfer_fromdel"] != null
+          req.body.data[key]["transfer_from"] != null
             ? req.body.data[key]["transfer_from"]
             : undefined;
 
