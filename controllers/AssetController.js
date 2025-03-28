@@ -731,6 +731,23 @@ const getAssetTypeId = async (code) => {
   return null;
 };
 
+const getAssetTypeIdByName = async (name) => {
+  if (name == undefined) return null;
+
+  const item = await prisma.asset_type.findFirst({
+    select: { id: true },
+    where: {
+      name: name.toString(),
+      deleted_at: null,
+    },
+  });
+
+  if (item) {
+    return item.id;
+  }
+  return null;
+};
+
 const getDepartmentId = async (code) => {
   if (code == undefined) return null;
 
@@ -1245,6 +1262,11 @@ const methods = {
             ? Number(req.body.data[key]["asset_type_code"])
             : undefined;
 
+        let asset_type_name =
+          req.body.data[key]["asset_type_name"] != null
+            ? req.body.data[key]["asset_type_name"]
+            : undefined;
+
         let brand =
           req.body.data[key]["brand"] != null
             ? req.body.data[key]["brand"]
@@ -1404,9 +1426,15 @@ const methods = {
             error_message.push("input_year is undefined");
           }
 
-          if (asset_type_code == undefined || asset_type_code == "") {
+          if ((asset_type_code == undefined || asset_type_code == "") && (asset_type_name == undefined || asset_type_name == "")) {
             input_error = true;
-            error_message.push("asset_type_code is undefined");
+            error_message.push("asset_type_code or asset_type_name is undefined");
+          } else if (asset_type_name != undefined && asset_type_name != "") {
+            asset_type_id = await getAssetTypeIdByName(asset_type_name);
+            if (asset_type_id == null) {
+              input_error = true;
+              error_message.push("asset_type_id not found");
+            }
           } else {
             asset_type_id = await getAssetTypeId(asset_type_code);
             if (asset_type_id == null) {
