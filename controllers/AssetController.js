@@ -1366,10 +1366,19 @@ const methods = {
             ? Number(req.body.data[key]["asset_status"])
             : undefined;
 
-        let cancel_type =
-          req.body.data[key]["cancel_type"] != null
-            ? Number(req.body.data[key]["cancel_type"])
-            : undefined;
+        let cancel_type_raw = req.body.data[key]["cancel_type"];
+        let cancel_type;
+        if (cancel_type_raw === "โอน") {
+          cancel_type = 1;
+        } else if (cancel_type_raw === "จำหน่าย") {
+          cancel_type = 2;
+        } else {
+          cancel_type = Number(cancel_type_raw);
+          if (isNaN(cancel_type) || (cancel_type !== 1 && cancel_type !== 2)) {
+            input_error = true;
+            error_message.push("cancel_type must be 'โอน' (1) or 'จำหน่าย' (2)");
+          }
+        }
 
         let cancel_date =
           req.body.data[key]["cancel_date"] != null
