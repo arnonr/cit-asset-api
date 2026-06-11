@@ -1393,6 +1393,7 @@ const methods = {
             : undefined;
 
         let cancel_type_raw = req.body.data[key]["cancel_type"];
+        let cancel_type = undefined;
 
         let is_active = 1;
         let budget_type_id = null;
@@ -1478,7 +1479,6 @@ const methods = {
         if (is_import == 2) {
           /* 2=ตัดโอน  */
 
-          let cancel_type;
           if (cancel_type_raw === "โอน") {
             cancel_type = 1;
           } else if (cancel_type_raw === "จำหน่าย") {
